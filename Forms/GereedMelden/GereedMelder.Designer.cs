@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GereedMelder));
             this.xgroup = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.panel3 = new System.Windows.Forms.Panel();
             this.xafkeur = new System.Windows.Forms.Button();
             this.xgereedlijst = new System.Windows.Forms.Button();
@@ -46,7 +47,6 @@
             this.xannuleerb = new System.Windows.Forms.Button();
             this.xgereedb = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.productieInfoUI1 = new Controls.ProductieInfoUI();
             this.xgroup.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -81,6 +81,21 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(806, 388);
             this.panel4.TabIndex = 13;
+            // 
+            // productieInfoUI1
+            // 
+            this.productieInfoUI1.AllowVerpakkingEdit = false;
+            this.productieInfoUI1.AutoScroll = true;
+            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
+            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
+            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
+            this.productieInfoUI1.Name = "productieInfoUI1";
+            this.productieInfoUI1.Padding = new System.Windows.Forms.Padding(5);
+            this.productieInfoUI1.ShowAantal = false;
+            this.productieInfoUI1.Size = new System.Drawing.Size(806, 317);
+            this.productieInfoUI1.TabIndex = 9;
             // 
             // panel3
             // 
@@ -276,19 +291,6 @@
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.toolTip1.ToolTipTitle = "Gereed Melden";
             // 
-            // productieInfoUI1
-            // 
-            this.productieInfoUI1.AutoScroll = true;
-            this.productieInfoUI1.BackColor = System.Drawing.Color.White;
-            this.productieInfoUI1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.productieInfoUI1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.productieInfoUI1.Location = new System.Drawing.Point(0, 0);
-            this.productieInfoUI1.Margin = new System.Windows.Forms.Padding(4);
-            this.productieInfoUI1.Name = "productieInfoUI1";
-            this.productieInfoUI1.ShowAantal = false;
-            this.productieInfoUI1.Size = new System.Drawing.Size(806, 317);
-            this.productieInfoUI1.TabIndex = 9;
-            // 
             // GereedMelder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -298,12 +300,12 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 550);
             this.Name = "GereedMelder";
-            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Meld Gereed";
+            this.Title = "Meld Gereed";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GereedMelder_FormClosing);
             this.Shown += new System.EventHandler(this.GereedMelder_Shown);
+            this.VisibleChanged += new System.EventHandler(this.GereedMelder_VisibleChanged);
             this.xgroup.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);

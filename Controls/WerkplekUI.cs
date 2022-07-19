@@ -469,12 +469,14 @@ namespace Controls
             {
                 if (xwerkpleklist.SelectedObjects[0] is WerkPlek wp)
                 {
-                    var ac = new AantalChanger {StartPosition = FormStartPosition.CenterParent};
-                    if (wp.Werk == null || ac.ShowDialog(wp) != DialogResult.OK) return;
-                    var xmsg = $"[{wp.Path}]Aantal aangepast van {wp.AantalGemaakt} naar {ac.Aantal}";
-                    wp.AantalGemaakt = ac.Aantal;
-                    wp.LaatstAantalUpdate = DateTime.Now;
-                    wp.Werk.UpdateBewerking(null, xmsg);
+                    var ag = new AantalGemaaktUI();
+                    ag.ShowDialog(wp.Werk?.Parent, wp.Werk, wp);
+                    //var ac = new AantalChanger {StartPosition = FormStartPosition.CenterParent};
+                    //if (wp.Werk == null || ac.ShowDialog(wp) != DialogResult.OK) return;
+                    //var xmsg = $"[{wp.Path}]Aantal aangepast van {wp.AantalGemaakt} naar {ac.Aantal}";
+                    //wp.AantalGemaakt = ac.Aantal;
+                    //wp.LaatstAantalUpdate = DateTime.Now;
+                    //wp.Werk.UpdateBewerking(null, xmsg);
                 }
             }
         }

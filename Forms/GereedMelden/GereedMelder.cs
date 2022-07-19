@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rpm.Various;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Controls;
+using ProductieManager.Properties;
 
 namespace Forms.GereedMelden
 {
@@ -80,6 +82,7 @@ namespace Forms.GereedMelden
         private void MeldGereed()
         {
             //if (_loading is { IsDisposed: false }) return;
+            var bws = Manager.Database.GetAllBewerkingen(false, true, false);
             if (DoCheck() && XMessageBox.Show(this, Melding,
                     "Gereed Melden",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -103,7 +106,7 @@ namespace Forms.GereedMelden
                     else Notitie += $"\n\nDe reden voor een te hoge 'PerUur' afwijking van '{afwijking}%':\n\n" + xt.Reden?.Trim().Split(':').LastOrDefault()?.Trim();
                 }
 
-                Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+               
                 //_loading = new LoadingForm();
                 //_loading.CloseIfFinished = true;
                 //_loading.FormClosed += (x, y) =>
@@ -119,7 +122,7 @@ namespace Forms.GereedMelden
                 //Application.DoEvents();
                 if (_prod is ProductieFormulier form)
                 {
-
+                    Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
                     //if (await form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true, _loading.Arg))
                     //    DialogResult = DialogResult.OK;
                     form.MeldGereed((int)xaantal.Value, xparaaf.Text.Trim(), Notitie, true, true);
@@ -180,7 +183,12 @@ namespace Forms.GereedMelden
                     //}
                     //else 
                     //    DialogResult = DialogResult.Cancel;
-                    _= bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int)xaantal.Value, Notitie, true, true, true);
+                    while (!bws.IsCompleted)
+                        Application.DoEvents();
+                    if (!StartNextProductie(bws.Result)) return;
+                    Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
+                    _ = bew.MeldBewerkingGereed(xparaaf.Text.Trim(), (int)xaantal.Value, Notitie, true, true, true);
+                  
                     ProductieManager.Properties.Settings.Default.Paraaf = xparaaf.Text.Trim();
                     ProductieManager.Properties.Settings.Default.Save();
                     DialogResult = DialogResult.OK;
@@ -195,7 +203,8 @@ namespace Forms.GereedMelden
             _prod.AantalGemaakt = (int)xaantal.Value;
             if ((_prod.TotaalGemaakt) <= 0 && xaantal.Value == 0)
             {
-                XMessageBox.Show(this, $"Je aantal kan niet 0 zijn!\nJe kan minstins maar 1 product gereedmelden",
+                XMessageBox.Show(this, $"Je aantal kan niet 0 zijn!\n\n" +
+                    $"Je kan minstins 1 product gereedmelden",
                     "Ongeldig Aantal", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
@@ -283,6 +292,68 @@ namespace Forms.GereedMelden
         {
             Manager.OnFormulierChanged -= Manager_OnFormulierChanged;
             productieInfoUI1.CloseUI();
+            ShowNextStarted();
+        }
+
+        private Bewerking _started;
+        private bool StartNextProductie(List<Bewerking> bws)
+        {
+            try
+            {
+                _started = null;
+                if (_prod is Bewerking bew)
+                {
+                    bws ??= Manager.Database.xGetAllBewerkingen(false, true, false);
+
+                    if (bws != null && bws.Count > 0)
+                    {
+                        bws.Remove(bew);
+                        var xbws = bws.Where(x => (x.State is ProductieState.Gestopt or ProductieState.Gestart) && x.WerkPlekken.Any(w => bew.WerkPlekken.Any(xw => string.Equals(w.Naam, xw.Naam, StringComparison.CurrentCultureIgnoreCase)))).OrderBy(x => x.LeverDatum).ToList();
+                        if (xbws.Any(x => x.State == ProductieState.Gestart)) return true;
+                        var xbw = xbws.FirstOrDefault();
+                        if (xbw != null)
+                        {
+                            if (xbw.State != ProductieState.Gestopt) return true;
+                            var result = XMessageBox.Show(Manager.ActiveForm??this, $"<span color='purple'><b>De volgende productie is <span color='navy'>'{xbw.ProductieNr}'</span>...</b></span>\n" +
+                                $"<span color='navy'>" +
+                                $"<b>{xbw.Naam}</b>\n" +
+                                $"{xbw.Omschrijving} ({xbw.ArtikelNr})</span>\n\n" +
+                                $"<span color='purple'><b>Wil je die gelijk starten?</b></span>", $"{xbw.ProductieNr} Starten",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,null,null,Resources.operation);
+                            if (result == DialogResult.Cancel) return false;
+                            if (result == DialogResult.Yes)
+                            {
+                                ProductieListControl.StartBewerkingen(OwnerForm ?? this, new Bewerking[] { xbw });
+                                _started = xbw;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex);
+                return true;
+            }
+        }
+
+        private void ShowNextStarted()
+        {
+            if (_started != null)
+            {
+                Manager.FormulierActie(new object[] { _started.Parent, _started, false }, MainAktie.OpenProductie);
+                Application.DoEvents();
+                OwnerForm = Application.OpenForms.OfType<Producties>().LastOrDefault();
+                _started = null;
+            }
+            if (OwnerForm == null || OwnerForm.IsDisposed | OwnerForm.Disposing)
+                OwnerForm = Manager.ActiveForm;
+            Manager.ActiveForm = OwnerForm;
+            Application.DoEvents();
+            OwnerForm?.Activate();
+            OwnerForm?.Select();
+            OwnerForm?.BringToFront();
         }
 
         private void Manager_OnFormulierChanged(object sender, ProductieFormulier changedform)
@@ -424,6 +495,14 @@ namespace Forms.GereedMelden
             if (_prod == null) return;
             var xafk = new AfkeurForm(_prod);
             xafk.ShowDialog(this);
+        }
+
+        private void GereedMelder_VisibleChanged(object sender, EventArgs e)
+        {
+            if(!this.Visible)
+            {
+                ShowNextStarted();
+            }
         }
     }
 }

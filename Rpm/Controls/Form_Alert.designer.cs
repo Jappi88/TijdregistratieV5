@@ -88,6 +88,7 @@
             // 
             // Form_Alert
             // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(450, 125);
             this.Controls.Add(this.lblMsg);
@@ -102,6 +103,7 @@
             this.Opacity = 0.75D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form_Alert";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_Alert_FormClosed);

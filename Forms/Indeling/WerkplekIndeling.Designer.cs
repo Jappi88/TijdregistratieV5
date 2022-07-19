@@ -40,9 +40,9 @@ namespace Controls
             this.xsettings = new System.Windows.Forms.Button();
             this.xresetindeling = new System.Windows.Forms.Button();
             this.xknoppenpanel = new System.Windows.Forms.Panel();
-            this.xVerwijderKlus = new System.Windows.Forms.Button();
             this.xStartKlus = new System.Windows.Forms.Button();
             this.xStopKlus = new System.Windows.Forms.Button();
+            this.xVerwijderKlus = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.xnietingedeeld = new MetroFramework.Controls.MetroCheckBox();
             this.xpersoonInfo = new TheArtOfDev.HtmlRenderer.WinForms.HtmlLabel();
@@ -94,9 +94,9 @@ namespace Controls
             this.xcompactinfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xcompactinfo.IsContextMenuEnabled = false;
             this.xcompactinfo.IsSelectionEnabled = false;
-            this.xcompactinfo.Location = new System.Drawing.Point(306, 0);
+            this.xcompactinfo.Location = new System.Drawing.Point(158, 0);
             this.xcompactinfo.Name = "xcompactinfo";
-            this.xcompactinfo.Size = new System.Drawing.Size(6, 44);
+            this.xcompactinfo.Size = new System.Drawing.Size(154, 44);
             this.xcompactinfo.TabIndex = 7;
             this.xcompactinfo.Text = null;
             this.xcompactinfo.ImageLoad += new System.EventHandler<TheArtOfDev.HtmlRenderer.Core.Entities.HtmlImageLoadEventArgs>(this.xpersoonInfo_ImageLoad);
@@ -187,39 +187,24 @@ namespace Controls
             this.xknoppenpanel.Location = new System.Drawing.Point(0, 0);
             this.xknoppenpanel.Name = "xknoppenpanel";
             this.xknoppenpanel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.xknoppenpanel.Size = new System.Drawing.Size(306, 44);
+            this.xknoppenpanel.Size = new System.Drawing.Size(158, 44);
             this.xknoppenpanel.TabIndex = 7;
             this.xknoppenpanel.Visible = false;
-            // 
-            // xVerwijderKlus
-            // 
-            this.xVerwijderKlus.BackColor = System.Drawing.Color.Transparent;
-            this.xVerwijderKlus.Dock = System.Windows.Forms.DockStyle.Left;
-            this.xVerwijderKlus.FlatAppearance.BorderSize = 0;
-            this.xVerwijderKlus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.xVerwijderKlus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xVerwijderKlus.Image = global::ProductieManager.Properties.Resources.page_remove_12862;
-            this.xVerwijderKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xVerwijderKlus.Location = new System.Drawing.Point(10, 0);
-            this.xVerwijderKlus.Name = "xVerwijderKlus";
-            this.xVerwijderKlus.Size = new System.Drawing.Size(44, 44);
-            this.xVerwijderKlus.TabIndex = 2;
-            this.xVerwijderKlus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Haal de geselecteerde productie uit de indeling");
-            this.xVerwijderKlus.UseVisualStyleBackColor = false;
-            this.xVerwijderKlus.Click += new System.EventHandler(this.xVerwijderKlus_Click);
-            this.xVerwijderKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
-            this.xVerwijderKlus.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
+            this.xknoppenpanel.Click += new System.EventHandler(this.xPersoonImage_Click);
+            this.xknoppenpanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.PersoonIndeling_DragDrop);
+            this.xknoppenpanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.PersoonIndeling_DragEnter);
+            this.xknoppenpanel.DragLeave += new System.EventHandler(this.PersoonIndeling_DragLeave);
+            this.xknoppenpanel.DoubleClick += new System.EventHandler(this.xPersoonImage_DoubleClick);
             // 
             // xStartKlus
             // 
+            this.xStartKlus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xStartKlus.BackColor = System.Drawing.Color.Transparent;
-            this.xStartKlus.Dock = System.Windows.Forms.DockStyle.Left;
             this.xStartKlus.FlatAppearance.BorderSize = 0;
             this.xStartKlus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xStartKlus.Image = global::ProductieManager.Properties.Resources.play_button_icon_icons_com_60615;
             this.xStartKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xStartKlus.Location = new System.Drawing.Point(98, 0);
+            this.xStartKlus.Location = new System.Drawing.Point(108, 0);
             this.xStartKlus.Name = "xStartKlus";
             this.xStartKlus.Size = new System.Drawing.Size(44, 44);
             this.xStartKlus.TabIndex = 0;
@@ -232,13 +217,13 @@ namespace Controls
             // 
             // xStopKlus
             // 
+            this.xStopKlus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.xStopKlus.BackColor = System.Drawing.Color.Transparent;
-            this.xStopKlus.Dock = System.Windows.Forms.DockStyle.Left;
             this.xStopKlus.FlatAppearance.BorderSize = 0;
             this.xStopKlus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xStopKlus.Image = global::ProductieManager.Properties.Resources.stop_red256_24890;
             this.xStopKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.xStopKlus.Location = new System.Drawing.Point(54, 0);
+            this.xStopKlus.Location = new System.Drawing.Point(58, 0);
             this.xStopKlus.Name = "xStopKlus";
             this.xStopKlus.Size = new System.Drawing.Size(44, 44);
             this.xStopKlus.TabIndex = 1;
@@ -248,6 +233,26 @@ namespace Controls
             this.xStopKlus.Click += new System.EventHandler(this.xStopKlus_Click);
             this.xStopKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
             this.xStopKlus.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
+            // 
+            // xVerwijderKlus
+            // 
+            this.xVerwijderKlus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xVerwijderKlus.BackColor = System.Drawing.Color.Transparent;
+            this.xVerwijderKlus.FlatAppearance.BorderSize = 0;
+            this.xVerwijderKlus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.xVerwijderKlus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xVerwijderKlus.Image = global::ProductieManager.Properties.Resources.page_remove_12862;
+            this.xVerwijderKlus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.xVerwijderKlus.Location = new System.Drawing.Point(8, 0);
+            this.xVerwijderKlus.Name = "xVerwijderKlus";
+            this.xVerwijderKlus.Size = new System.Drawing.Size(44, 44);
+            this.xVerwijderKlus.TabIndex = 2;
+            this.xVerwijderKlus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.xVerwijderKlus, "Haal de geselecteerde productie uit de indeling");
+            this.xVerwijderKlus.UseVisualStyleBackColor = false;
+            this.xVerwijderKlus.Click += new System.EventHandler(this.xVerwijderKlus_Click);
+            this.xVerwijderKlus.MouseEnter += new System.EventHandler(this.xPersoonImage_MouseEnter);
+            this.xVerwijderKlus.MouseLeave += new System.EventHandler(this.xPersoonImage_MouseLeave);
             // 
             // toolTip1
             // 

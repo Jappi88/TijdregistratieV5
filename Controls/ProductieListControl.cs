@@ -76,7 +76,8 @@ namespace Controls
         public CustomObjectListview ProductieLijst => xProductieLijst1;
 
         public string ListName { get; set; }
-       // public bool RemoveCustomItemIfNotValid { get; set; }
+        public string WindowName { get; set; }
+        // public bool RemoveCustomItemIfNotValid { get; set; }
         public bool CustomList { get; private set; }
         private List<ProductieFormulier> Producties { get; set; } = new();
         private List<Bewerking> Bewerkingen { get; set; } = new();
@@ -962,7 +963,7 @@ namespace Controls
                     bws.AddRange(Bewerkingen = Manager.xGetBewerkingen(states, true, check));
                 }
                 if (customfilter && ValidHandler != null)
-                    bws = bws.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(x, GetFilter()))
+                    bws = bws.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(this, x, GetFilter()))
                         .ToList();
                 else
                     bws = bws.Where(x => IsAllowd(x, true) && x.IsAllowed(GetFilter())).ToList();
@@ -984,7 +985,7 @@ namespace Controls
                     .ToList()
                 : Producties = Manager.xGetProducties(states, true, true, null, check);
             if (customfilter && ValidHandler != null)
-                xprods = xprods.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(x, GetFilter()))
+                xprods = xprods.Where(x => IsAllowd(x, true) && ValidHandler.Invoke(this, x, GetFilter()))
                     .ToList();
             else
                 xprods = xprods.Where(x => IsAllowd(x, true) && x.IsAllowed(GetFilter(), states, true))
@@ -1133,7 +1134,7 @@ namespace Controls
                 {
                     var isvalid = IsAllowd(form, true) && form.IsAllowed(filter, states, true);
                     if (isvalid && ValidHandler != null)
-                        isvalid &= ValidHandler.Invoke(form, filter);
+                        isvalid &= ValidHandler.Invoke(this, form, filter);
 
                     var xproducties = Producties;
                     if (xproducties == null)
@@ -1323,7 +1324,7 @@ namespace Controls
                         var isvalid = IsAllowd(b, true) && b.IsAllowed(filter ?? GetFilter()) &&
                                       states.Any(x => b.IsValidState(x));
                         if (isvalid && ValidHandler != null)
-                            isvalid &= ValidHandler.Invoke(b, filter ?? GetFilter());
+                            isvalid &= ValidHandler.Invoke(this, b, filter ?? GetFilter());
                         // lock (_locker)
                         //{
                         if (IsDisposed || Disposing) break;
@@ -1427,7 +1428,7 @@ namespace Controls
             if (valid)
             {
                 if (ValidHandler != null)
-                    valid &= states.Any(bew.IsValidState) && ValidHandler.Invoke(bew, null);
+                    valid &= states.Any(bew.IsValidState) && ValidHandler.Invoke(this, bew, null);
                 else valid &= states.Any(bew.IsValidState) && bew.IsAllowed(null, false);
             }
             var xret = false;
@@ -1500,7 +1501,7 @@ namespace Controls
             if (valid)
             {
                 if (ValidHandler != null)
-                    valid &= states.Any(form.IsValidState) && ValidHandler.Invoke(form, null);
+                    valid &= states.Any(form.IsValidState) && ValidHandler.Invoke(this,form, null);
                 else valid &= states.Any(form.IsValidState) && form.IsAllowed(null);
             }
             if (index == -1)
@@ -1991,8 +1992,10 @@ namespace Controls
                 var res = DialogResult.Yes;
                 if (b.TotaalGemaakt < b.Aantal)
                     res = XMessageBox.Show(owner,
-                        $"Aantal van '{b.Naam}' is nog niet bereikt... Je hebt maar {b.TotaalGemaakt} van de {b.Aantal} gemaakt.\nWeetje zeker dat je toch verder wilt gaan met gereedmelden?",
-                        "Niet Klaar", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                        $"Aantal van '{b.Naam}' is nog niet bereikt...\n" +
+                        $"Je hebt maar {b.TotaalGemaakt} van de {b.Aantal} gemaakt.\n\n" +
+                        $"Weetje zeker dat je toch verder wilt gaan met gereedmelden?",
+                        $"{b.ProductieNr} Gereedmelden", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (res == DialogResult.Yes)
                 {
                     var x = new GereedMelder();
@@ -2887,7 +2890,7 @@ namespace Controls
                         {
                             var flag = bw.IsAllowed() && IsAllowd(bw, true);
                             if (ValidHandler != null)
-                                flag &= ValidHandler.Invoke(bw, null);
+                                flag &= ValidHandler.Invoke(this,bw, null);
                             if (flag)
                                 bws.Add(bw);
                         }
@@ -3710,6 +3713,20 @@ namespace Controls
         protected virtual void OnItemsCancel()
         {
             ItemsCancel?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void xOpenListWindow_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(Bewerkingen != null && Bewerkingen.Count > 0)
+                {
+                    ProductieView.ShowProductieLijstForm(this, Bewerkingen, WindowName, ListName, ValidHandler);
+                }
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

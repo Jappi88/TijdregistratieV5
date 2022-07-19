@@ -55,6 +55,7 @@ namespace Controls
             this.openWerkplekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.werkTijdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bijlagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xafkeurstoolstrip = new System.Windows.Forms.ToolStripMenuItem();
             this.storingenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -68,7 +69,6 @@ namespace Controls
             this.notitieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.bijlagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.xwerkpleklist)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -337,6 +337,8 @@ namespace Controls
             this.openProductieToolStripMenuItem,
             this.openWerkplekToolStripMenuItem,
             this.toolStripSeparator3,
+            this.wijzigAantalGemaaktToolStripMenuItem,
+            this.toolStripSeparator1,
             this.werkTijdToolStripMenuItem,
             this.bijlagesToolStripMenuItem,
             this.xafkeurstoolstrip,
@@ -345,13 +347,11 @@ namespace Controls
             this.onderbrekenToolStripMenuItem,
             this.hervattenToolStripMenuItem,
             this.toolStripSeparator5,
-            this.toolStripSeparator1,
-            this.wijzigAantalGemaaktToolStripMenuItem,
             this.aantalGeschiedenisToolStripMenuItem,
             this.toolStripSeparator2,
             this.notitieToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 298);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(193, 276);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // openProductieToolStripMenuItem
@@ -382,6 +382,14 @@ namespace Controls
             this.werkTijdToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.werkTijdToolStripMenuItem.Text = "&Werk Tijden";
             this.werkTijdToolStripMenuItem.Click += new System.EventHandler(this.werkTijdToolStripMenuItem_Click);
+            // 
+            // bijlagesToolStripMenuItem
+            // 
+            this.bijlagesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.attachment256_24841_32x32;
+            this.bijlagesToolStripMenuItem.Name = "bijlagesToolStripMenuItem";
+            this.bijlagesToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.bijlagesToolStripMenuItem.Text = "Bijlages";
+            this.bijlagesToolStripMenuItem.Click += new System.EventHandler(this.bijlagesToolStripMenuItem_Click);
             // 
             // xafkeurstoolstrip
             // 
@@ -476,14 +484,6 @@ namespace Controls
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(977, 580);
             this.panel2.TabIndex = 2;
-            // 
-            // bijlagesToolStripMenuItem
-            // 
-            this.bijlagesToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.attachment256_24841_32x32;
-            this.bijlagesToolStripMenuItem.Name = "bijlagesToolStripMenuItem";
-            this.bijlagesToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.bijlagesToolStripMenuItem.Text = "Bijlages";
-            this.bijlagesToolStripMenuItem.Click += new System.EventHandler(this.bijlagesToolStripMenuItem_Click);
             // 
             // WerkPlekkenUI
             // 

@@ -49,6 +49,7 @@ namespace Forms
             this.xIndelingPanel = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.productieListControl1 = new Controls.ProductieListControl();
+            this.xBerekenDatumTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -82,9 +83,9 @@ namespace Forms
             this.xCollapseButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.xCollapseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.xCollapseButton.Image = global::ProductieManager.Properties.Resources.Navigate_left_36746;
-            this.xCollapseButton.Location = new System.Drawing.Point(486, 39);
+            this.xCollapseButton.Location = new System.Drawing.Point(486, 0);
             this.xCollapseButton.Name = "xCollapseButton";
-            this.xCollapseButton.Size = new System.Drawing.Size(24, 690);
+            this.xCollapseButton.Size = new System.Drawing.Size(24, 729);
             this.xCollapseButton.TabIndex = 0;
             this.xCollapseButton.UseVisualStyleBackColor = false;
             this.xCollapseButton.Click += new System.EventHandler(this.xCollapseButton_Click);
@@ -101,7 +102,7 @@ namespace Forms
             this.xreset});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(510, 39);
+            this.toolStrip1.Size = new System.Drawing.Size(486, 39);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -245,8 +246,8 @@ namespace Forms
             // 
             this.xIndelingPanel.AutoScroll = true;
             this.xIndelingPanel.Controls.Add(this.xWerkplaatsIndelingPanel);
-            this.xIndelingPanel.Controls.Add(this.xCollapseButton);
             this.xIndelingPanel.Controls.Add(this.toolStrip1);
+            this.xIndelingPanel.Controls.Add(this.xCollapseButton);
             this.xIndelingPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.xIndelingPanel.Location = new System.Drawing.Point(0, 0);
             this.xIndelingPanel.Name = "xIndelingPanel";
@@ -280,9 +281,16 @@ namespace Forms
             this.productieListControl1.Size = new System.Drawing.Size(764, 677);
             this.productieListControl1.TabIndex = 4;
             this.productieListControl1.ValidHandler = null;
+            this.productieListControl1.WindowName = null;
             this.productieListControl1.SelectedItemChanged += new System.EventHandler(this.ProductieListControl1_SelectedItemChanged);
             this.productieListControl1.ItemCountChanged += new System.EventHandler(this.ProductieListControl1_ItemCountChanged);
             this.productieListControl1.SearchItems += new System.EventHandler(this.ProductieListControl1_SearchItems);
+            // 
+            // xBerekenDatumTimer
+            // 
+            this.xBerekenDatumTimer.Enabled = true;
+            this.xBerekenDatumTimer.Interval = 30000;
+            this.xBerekenDatumTimer.Tick += new System.EventHandler(this.xBerekenDatumTimer_Tick);
             // 
             // WerkplaatsIndelingUI
             // 
@@ -323,5 +331,6 @@ namespace Forms
         private System.Windows.Forms.Button xPreviousIndeling;
         private System.Windows.Forms.Button xNextIndeling;
         private Controls.ProductieListControl productieListControl1;
+        private System.Windows.Forms.Timer xBerekenDatumTimer;
     }
 }

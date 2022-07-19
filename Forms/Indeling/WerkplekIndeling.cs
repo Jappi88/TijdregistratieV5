@@ -253,11 +253,13 @@ namespace Controls
                                 var wp = bew.GetWerkPlek(Werkplek, true);
                                 wp.Tijden.WerkRooster = Settings?.WerkRooster;
                                 wp.Tijden.SpecialeRoosters = Settings?.SpecialeRoosters;
-                                _ = per.UpdateForm(true,false,null,
+                                _ = per.xUpdateForm(true,false,null,
                                     $"[{wp.Naam}] Ingedeeld op {bew.Path}");
                             }
                         }
                     }
+                    Application.DoEvents();
+                    OnUpdateIndeling();
                 }
                 BitMapCursor?.Dispose();
                 BitMapCursor = null;
@@ -315,6 +317,8 @@ namespace Controls
                         SelectedBewerking.WerkPlekken.Remove(xr);
                     _ = SelectedBewerking.UpdateBewerking(null,
                         $"{Werkplek} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
+                    Application.DoEvents();
+                    OnUpdateIndeling();
                 }
 
             }
@@ -452,6 +456,12 @@ namespace Controls
         protected virtual void OnResetIndeling()
         {
             ResetIndeling?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler UpdateIndeling;
+        protected virtual void OnUpdateIndeling()
+        {
+            UpdateIndeling?.Invoke(this, EventArgs.Empty);
         }
 
         private bool _isDragging;

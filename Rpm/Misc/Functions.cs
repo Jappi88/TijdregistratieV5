@@ -2612,7 +2612,7 @@ namespace Rpm.Misc
                         xform = xforms[xcur];
                     else xform = xforms.LastOrDefault();
                 }
-                xform ??= Application.OpenForms["Mainform"];
+                xform ??= Application.OpenForms.OfType<Form>().LastOrDefault();
             }
             catch (Exception e)
             {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Rpm.Controls;
 using Rpm.Mailing;
+using Rpm.Productie;
 using Rpm.Various;
 
 namespace Rpm.Misc
@@ -19,18 +20,18 @@ namespace Rpm.Misc
         /// </summary>
         /// <param name="message">De bericht die getoond moet worden</param>
         /// <param name="title">De titel van de notificatie</param>
-        public static void Notify(this RemoteMessage message, string title)
+        public static void Notify(this RemoteMessage message,IWin32Window owner, string title)
         {
-            message?.Message?.Alert( title, message.MessageType);
+            message?.Message?.Alert(owner, title, message.MessageType);
         }
 
         /// <summary>
         /// Toon  notificatie
         /// </summary>
         /// <param name="message">De bericht die getoond moet worden</param>
-        public static void Notify(this RemoteMessage message)
+        public static void Notify(this RemoteMessage message, IWin32Window owner)
         {
-            message.Message.Alert(message.Title,message.MessageType);
+            message.Message.Alert(owner, message.Title, message.MessageType);
         }
 
         /// <summary>
@@ -40,32 +41,30 @@ namespace Rpm.Misc
         /// <param name="title">De titel van de notificatie</param>
         /// <param name="type">De soort notificatie</param>
         /// <param name="closed">Een event die je kan koppelen als de notificatie is afgesloten</param>
-        public static void Alert(this string msg, string title, MsgType type, FormClosedEventHandler closed = null)
+        public static void Alert(this string msg, IWin32Window owner, string title, MsgType type, FormClosedEventHandler closed = null)
         {
 
             if (Application.OpenForms.Count == 0) return;
 
             try
             {
-                var visibleform = Application.OpenForms["Mainform"];
-                visibleform?.BeginInvoke(new MethodInvoker(() =>
+                var visibleform = owner??Application.OpenForms["Mainform"];
+                try
                 {
-                    try
-                    {
-                        var frm = new Form_Alert();
-                        if (closed != null)
-                            frm.FormClosed += closed;
-                        frm.FormClosed += MessageClosed;
-                           //_messages.Add(frm);
-                           frm.showAlert(msg, title, type);
-                           // frm.MdiParent = parent;
-                           frm.Show();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }));
+                    var frm = new Form_Alert();
+                    if (closed != null)
+                        frm.FormClosed += closed;
+                    frm.OwnerForm = Manager.ActiveForm;
+                    frm.FormClosed += MessageClosed;
+                    //_messages.Add(frm);
+                    frm.showAlert(msg, title, type);
+                    // frm.MdiParent = parent;
+                    frm.Show();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
                 //visibleform?.Select();
                 //visibleform?.Focus();
             }

@@ -38,7 +38,7 @@ namespace Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(842, 527);
+            this.ClientSize = new System.Drawing.Size(734, 471);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
@@ -47,8 +47,6 @@ namespace Forms
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(750, 510);
             this.Name = "ProductieLijsten";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProductieLijsten_FormClosing);
-            this.Load += new System.EventHandler(this.ProductieLijsten_Load);
             this.ResumeLayout(false);
 
         }

@@ -655,7 +655,8 @@ namespace Forms.ArtikelRecords
                         _productielijstdock = new ProductieLijsten(this)
                         {
                             Tag = prodform,
-                            StartPosition = FormStartPosition.CenterScreen
+                            StartPosition = FormStartPosition.CenterScreen,
+                            SaveLastInfo = true
                     };
                         _productielijstdock.FormClosed += _productielijstdock_FormClosed;
                     }
@@ -679,7 +680,7 @@ namespace Forms.ArtikelRecords
             }
         }
 
-        public bool IsValidHandler(object value, string filter, bool tempfilter = false)
+        public bool IsValidHandler(object sender, object value, string filter, bool tempfilter = false)
         {
             if (value is Bewerking bew)
             {

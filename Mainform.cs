@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using Forms;
+using Forms.MetroBase;
 using Rpm.Mailing;
 using Rpm.Misc;
 using Rpm.Productie;
@@ -23,7 +24,7 @@ namespace ProductieManager
     /// De hoofd scherm van de productiemanager
     /// </summary>
     [Serializable]
-    public partial class Mainform : Form
+    public partial class Mainform : BaseForm
     {
         private string _bootDir;
         private PathWatcher _dbWatcher;
@@ -71,6 +72,7 @@ namespace ProductieManager
             Shown += Mainform_Shown;
             //StickyWindow.RegisterExternalReferenceForm(this);
              LoadManager();
+            OwnerForm = this;
         }
 
         private void LoadManager()
@@ -314,13 +316,14 @@ namespace ProductieManager
         public void ShowMessagePopup(RemoteMessage msg)
         {
             if (msg == null) return;
-            if (Manager.Opties is {ToonLogNotificatie: false}) return;
+            if (Manager.Opties is { ToonLogNotificatie: false }) return;
             try
             {
-                //if (InvokeRequired)
-                //    BeginInvoke(new Action(msg.Notify));
-                //else
-                    msg.Notify();
+                var f = Manager.ActiveForm??this;
+                if (f.InvokeRequired)
+                    f.BeginInvoke(new Action(()=> msg.Notify(f)));
+                else
+                    msg.Notify(f);
             }
             catch (Exception e)
             {

@@ -333,7 +333,7 @@ namespace Forms
             UpdateTitle();
         }
 
-        private bool IsAllowed(object value, string filter, bool tempfilter = true)
+        private bool IsAllowed(object sender, object value, string filter, bool tempfilter = true)
         {
             if (value is Bewerking bew)
             {

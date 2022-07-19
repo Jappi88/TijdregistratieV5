@@ -122,6 +122,7 @@
             // 
             // LoadingForm
             // 
+            this.AllowActivation = false;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.CancelButton = this.xsluiten;

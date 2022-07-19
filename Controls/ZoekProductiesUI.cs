@@ -69,7 +69,7 @@ namespace Controls
 
         public RangeFilter ShowFilter;
 
-        private bool IsAllowed(object value, string filter, bool tempfilter = false)
+        private bool IsAllowed(object sender, object value, string filter, bool tempfilter = false)
         {
             try
             {
@@ -217,7 +217,7 @@ namespace Controls
                     }
                     _isbussy = true;
                     productieListControl1.SetWaitUI("Producties zoeken");
-                    var bws = Manager.Database.xGetAllBewerkingen(true, true, true).Where(x=> IsAllowed(x, null)).ToList();//.xGetAllProductieIDs(true, true);
+                    var bws = Manager.Database.xGetAllBewerkingen(true, true, true).Where(x=> IsAllowed(this, x, null)).ToList();//.xGetAllProductieIDs(true, true);
                     //int cur = 0;
                     //int max = bws.Count;
                     //var loaded = new List<Bewerking>();

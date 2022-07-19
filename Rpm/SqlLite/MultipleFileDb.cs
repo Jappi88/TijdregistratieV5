@@ -263,7 +263,7 @@ namespace Rpm.SqlLite
                     var xent = GetInstanceFromFile<T>(file,MonitorCorrupted, null, false, new TijdEntry(vanaf, tot, null));
                     if (xent != null)
                     {
-                        if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
+                        if (validhandler != null && !validhandler.Invoke(this, xent, null)) continue;
                         xreturn.Add(xent);
                     }
                 }
@@ -295,7 +295,7 @@ namespace Rpm.SqlLite
                     var xent = GetInstanceFromFile<T>(file, MonitorCorrupted);
                     if (xent != null)
                     {
-                        if (validhandler != null && !validhandler.Invoke(xent, null)) continue;
+                        if (validhandler != null && !validhandler.Invoke(this, xent, null)) continue;
                         xreturn.Add(xent);
                     }
                 }

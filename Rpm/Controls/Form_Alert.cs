@@ -4,10 +4,12 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Rpm.Misc;
+using Rpm.Productie;
+using Forms.MetroBase;
 
 namespace Rpm.Controls
 {
-    public partial class Form_Alert: Form
+    public partial class Form_Alert: BaseForm
     {
         public enum enmAction
         {
@@ -23,24 +25,35 @@ namespace Rpm.Controls
         public Form_Alert()
         {
             InitializeComponent();
-            _Timer = new System.Timers.Timer();
-            _Timer.Elapsed += timer1_Tick;
+            this.Size = new Size(450, 125);
+            AllowActivation = false;
+            SaveLastInfo = false;
+            _Timer = new Timer();
+            _Timer.Tick += timer1_Tick;
             _Timer.Interval = 10;
             _Timer.Enabled = false;
         }
 
         protected override bool ShowWithoutActivation => true;
-        private System.Timers.Timer _Timer;
+        private Timer _Timer;
 
         private void TimerTick()
         {
             try
             {
+               
                 if (this.Disposing || this.IsDisposed)
                 {
                     _Timer.Stop();
                     return;
                 }
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(TimerTick));
+                    return;
+                }
+                if (Manager.ActiveForm != null && !Manager.ActiveForm.IsDisposed && Manager.ActiveForm.Visible)
+                    OwnerForm = Manager.ActiveForm;
                 switch (action)
                 {
                     case enmAction.wait:
@@ -98,7 +111,10 @@ namespace Rpm.Controls
             }
             try
             {
-                this.Invoke(new Action(TimerTick));
+                //if (InvokeRequired)
+                //    this.Invoke(new Action(TimerTick));
+                //else
+                TimerTick();
             }
             catch(Exception ex)
             {
@@ -181,35 +197,39 @@ namespace Rpm.Controls
             lblMsg.Text = msg;
         }
 
-        private void FocusParent()
+        private void xFocusParent()
         {
-            if (this.InvokeRequired)
-                this.Invoke(new MethodInvoker(FocusParent));
-            else
+            try
             {
-                var xform = this.GetParentForm();
+                var xform = ((Form)OwnerForm)??this.GetParentForm();
                 if (xform != null)
                 {
-                    FocusForm(xform);
+                    xFocusForm(xform);
                 }
             }
+            catch { }
         }
 
-        private void FocusForm(Form form)
+        private void xFocusForm(Form form)
         {
             if (form == null) return;
-            if (form.InvokeRequired)
-                form.Invoke(new MethodInvoker(() => FocusForm(form)));
-            else
+            try
             {
-                form.BringToFront();
-                form.Focus();
+                if (form.InvokeRequired)
+                    form.Invoke(new MethodInvoker(() => xFocusForm(form)));
+                else
+                {
+                    //form.BringToFront();
+                    form.Focus();
+                    form.Select();
+                }
             }
+            catch { }
         }
 
         private void Form_Alert_FormClosed(object sender, FormClosedEventArgs e)
         {
-            FocusParent();
+            xFocusParent();
         }
 
         public new void Show()
@@ -218,8 +238,8 @@ namespace Rpm.Controls
             action = enmAction.start;
             _Timer.Interval = 10;
             _Timer.Start();
-            Invalidate();
-            FocusParent();
+            //Invalidate();
+           //xFocusParent();
         }
 
     }

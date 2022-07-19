@@ -137,6 +137,7 @@ namespace Forms.Chat
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.NewMessageForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.xMainImage)).EndInit();
             this.xMessagePanel.ResumeLayout(false);
             this.xMainPanel.ResumeLayout(false);

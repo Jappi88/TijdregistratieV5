@@ -1,8 +1,7 @@
-﻿using WeifenLuo.WinFormsUI.Docking;
-
-namespace Forms
+﻿
+namespace Forms.MetroBase
 {
-    partial class Producties
+    partial class BaseForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,21 +29,20 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Producties));
             this.SuspendLayout();
             // 
-            // Producties
+            // BaseForm
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(956, 675);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.Black;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MinimumSize = new System.Drawing.Size(950, 675);
-            this.Name = "Producties";
-            this.TransparencyKey = System.Drawing.Color.Empty;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "BaseForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "BaseForm";
+            this.Activated += new System.EventHandler(this.BaseForm_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Producties_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BaseForm_FormClosed);
+            this.Load += new System.EventHandler(this.Producties_Load);
             this.ResumeLayout(false);
 
         }

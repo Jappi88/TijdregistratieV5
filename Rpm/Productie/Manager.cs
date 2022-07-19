@@ -43,6 +43,7 @@ namespace Rpm.Productie
         public static readonly string HelpDropUrl =
             "https://www.dropbox.com/s/5xc90j20d5odya6/Help.txt?dl=1";
         // public static LocalService LocalConnection { get; private set; }
+        public static Form ActiveForm { get; set; }
         public static bool AllowEvents { get; set; } = true;
         public static ArtikelRecords.ArtikelRecords ArtikelRecords { get; set; }
         public static VerpakkingBeheer Verpakkingen { get; private set; }

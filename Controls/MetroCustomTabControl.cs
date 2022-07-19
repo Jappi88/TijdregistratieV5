@@ -59,9 +59,11 @@ namespace Controls
 
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
-            MetroTabPage draggedTab = (MetroTabPage)drgevent.Data.GetData(typeof(MetroTabPage));
+            try
+            {
+                MetroTabPage draggedTab = (MetroTabPage)drgevent.Data.GetData(typeof(MetroTabPage));
 
-            if (draggedTab?.Parent != this)
+            if (draggedTab != null && draggedTab.Parent != this)
             {
                 draggedTab.Parent = this;
                 this.SelectedTab = draggedTab;
@@ -70,26 +72,33 @@ namespace Controls
             predraggedTab = null;
 
             base.OnDragDrop(drgevent);
+            }
+            catch { }
         }
 
         protected override void OnDragOver(DragEventArgs drgevent)
         {
-            MetroTabPage draggedTab = (MetroTabPage)drgevent.Data.GetData(typeof(MetroTabPage));
-            MetroTabPage pointedTab = getPointedTab();
-
-            if (draggedTab == predraggedTab && pointedTab != null)
+            try
             {
-                drgevent.Effect = DragDropEffects.Move;
 
-                if (pointedTab != draggedTab)
-                    swapTabPages(draggedTab, pointedTab);
-            }
-            else if (draggedTab != null && draggedTab.Parent != this)
-            {
-                drgevent.Effect = DragDropEffects.Move;
-            }
+                MetroTabPage draggedTab = (MetroTabPage)drgevent.Data.GetData(typeof(MetroTabPage));
+                MetroTabPage pointedTab = getPointedTab();
 
-            base.OnDragOver(drgevent);
+                if (draggedTab == predraggedTab && pointedTab != null)
+                {
+                    drgevent.Effect = DragDropEffects.Move;
+
+                    if (pointedTab != draggedTab)
+                        swapTabPages(draggedTab, pointedTab);
+                }
+                else if (draggedTab != null && draggedTab.Parent != this)
+                {
+                    drgevent.Effect = DragDropEffects.Move;
+                }
+
+                base.OnDragOver(drgevent);
+            }
+            catch { }
         }
 
         private MetroTabPage getPointedTab()
@@ -106,6 +115,7 @@ namespace Controls
 
         private void swapTabPages(MetroTabPage src, MetroTabPage dst)
         {
+            if (src == null || dst == null) return;
             int srci = this.TabPages.IndexOf(src);
             int dsti = this.TabPages.IndexOf(dst);
             if (srci < 0 || dsti < 0) return;

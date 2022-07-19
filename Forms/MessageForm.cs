@@ -104,10 +104,10 @@ namespace Forms
         {
             _CustomImage = customImage != null;
             Text = title;
-            xmessage.Text = message;
+            xmessage.Text = $"<span style= color:'navy' align:'center'>{message?.Replace("\n","<br>")}</h2>";
             var maxSize = new Size(xmessage.Width, int.MaxValue);
-            var textheight = TextRenderer.MeasureText(xmessage.Text, xmessage.Font, maxSize).Height;
-            Height = textheight + 200;
+            var textheight = TextRenderer.MeasureText(message, xmessage.Font, maxSize).Height;
+            Height = textheight + 150;
             MinimumSize = new Size(this.Width, this.Height);
             owner = ((Control)owner)?.FindForm() ?? owner;
             if (owner is Form f && f.Parent != null)

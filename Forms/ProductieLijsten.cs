@@ -1,4 +1,5 @@
-﻿using Rpm.Misc;
+﻿using Forms.MetroBase;
+using Rpm.Misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,16 +9,13 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Forms
 {
-    public partial class ProductieLijsten : Form
+    public partial class ProductieLijsten : BaseForm
     {
-        private readonly IWin32Window _owner;
 
-        public ProductieLijsten(IWin32Window owner)
+        public ProductieLijsten(IWin32Window owner): base(owner)
         {
-            _owner = owner;
             InitializeComponent();
             InitDock();
-           
         }
 
         public void InitDock()
@@ -138,56 +136,6 @@ namespace Forms
                 curindex++;
                 //content.DockHandler.DockTo(pane, DockStyle.Right, i);
             }
-        }
-
-        private void ProductieLijsten_Load(object sender, EventArgs e)
-        {
-            InitInfo();
-            //this.InitLastInfo(false);
-            //if (this.Parent == null)
-            //{
-            //    var xparent = this.GetParentForm();
-            //    if (xparent != null)
-            //    {
-            //        var area = Screen.GetWorkingArea(xparent);
-            //        var y = (area.Location.Y + area.Height / 2) - this.Height / 2;
-            //        var x = (area.Location.X + area.Width / 2) - this.Width / 2;
-            //        if (area.Contains(new Point(x, y)))
-            //            this.Location = new Point(x, y);
-            //        else this.StartPosition = FormStartPosition.CenterScreen;
-            //    }
-            //    else
-            //        this.StartPosition = FormStartPosition.CenterScreen;
-            //}
-            //else this.StartPosition = FormStartPosition.CenterParent;
-        }
-
-        private void InitInfo()
-        {
-            try
-            {
-                var par = ((Control)_owner) ?? this.GetParentForm();
-                if (par != null)
-                {
-                    par = par?.Parent?.FindForm() ?? par;
-                    var loc = par.Location;
-                    var x = (loc.X + (par.Width / 2)) - ((this.Width / 2));
-                    var y = (loc.Y + (par.Height / 2)) - ((this.Height / 2));
-                    this.Location = new Point(x, y);
-                    this.Invalidate();
-                }
-                this.InitLastInfo(false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        private void ProductieLijsten_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.SetLastInfo();
-            ((Control)_owner)?.BringToFront();
         }
     }
 }

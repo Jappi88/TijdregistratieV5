@@ -39,6 +39,7 @@ namespace Controls
             this.xtoolstripstart = new System.Windows.Forms.ToolStripMenuItem();
             this.xtoolstripstop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.printenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xwijzigToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xbewleverDatumToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +148,6 @@ namespace Controls
             this.xresultpanel = new System.Windows.Forms.Panel();
             this.xok = new System.Windows.Forms.Button();
             this.xannuleren = new System.Windows.Forms.Button();
-            this.printenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.xProductieLijst1)).BeginInit();
             this.xproductieLijstcontext.SuspendLayout();
@@ -310,6 +310,16 @@ namespace Controls
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(265, 6);
+            // 
+            // printenToolStripMenuItem
+            // 
+            this.printenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.print_Doc_32x32;
+            this.printenToolStripMenuItem.Name = "printenToolStripMenuItem";
+            this.printenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F7;
+            this.printenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.printenToolStripMenuItem.Text = "Printen";
+            this.printenToolStripMenuItem.ToolTipText = "Productieformulier printen";
+            this.printenToolStripMenuItem.Click += new System.EventHandler(this.xPrinten_Click);
             // 
             // productieToolStripMenuItem
             // 
@@ -856,6 +866,7 @@ namespace Controls
             this.xberekendatums.TabIndex = 101;
             this.toolTip1.SetToolTip(this.xberekendatums, "Bereken en voorzie de producties met een berekend leverdatum");
             this.xberekendatums.UseVisualStyleBackColor = true;
+            this.xberekendatums.Visible = false;
             this.xberekendatums.Click += new System.EventHandler(this.xberekendatums_Click);
             // 
             // xToonVDatumsbutton
@@ -1412,16 +1423,6 @@ namespace Controls
             this.xannuleren.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.xannuleren.UseVisualStyleBackColor = true;
             this.xannuleren.Click += new System.EventHandler(this.xannuleren_Click);
-            // 
-            // printenToolStripMenuItem
-            // 
-            this.printenToolStripMenuItem.Image = global::ProductieManager.Properties.Resources.print_Doc_32x32;
-            this.printenToolStripMenuItem.Name = "printenToolStripMenuItem";
-            this.printenToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F7;
-            this.printenToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.printenToolStripMenuItem.Text = "Printen";
-            this.printenToolStripMenuItem.ToolTipText = "Productieformulier printen";
-            this.printenToolStripMenuItem.Click += new System.EventHandler(this.xPrinten_Click);
             // 
             // ProductieListControl
             // 

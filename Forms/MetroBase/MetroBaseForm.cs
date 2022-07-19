@@ -2,6 +2,7 @@
 using MetroFramework.Forms;
 using MetroFramework.Interfaces;
 using Rpm.Misc;
+using Rpm.Productie;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Forms.MetroBase
         public Form OwnerForm { get; set; }
 
         public bool InitLastLocation { get; set; }
-
+        public bool AllowActivation { get; set; } = true;
         public MetroBaseForm()
         {
             InitializeComponent();
@@ -33,13 +34,16 @@ namespace Forms.MetroBase
             // 
             // MetroBaseForm
             // 
+            this.ClientSize = new System.Drawing.Size(300, 300);
             this.MinimumSize = new System.Drawing.Size(100, 75);
             this.Name = "MetroBaseForm";
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
+            this.Activated += new System.EventHandler(this.MetroBaseForm_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MetroBaseForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MetroBaseForm_FormClosed);
             this.Shown += new System.EventHandler(this.MetroBaseForm_Load);
             this.ResumeLayout(false);
+
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -195,12 +199,18 @@ namespace Forms.MetroBase
         {
             if (SaveLastSize)
                 this.SetLastInfo();
+            if (Manager.ActiveForm != null && Manager.ActiveForm.Equals(this))
+            {
+                Manager.ActiveForm = null;
+            }
         }
 
         private void MetroBaseForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
+                if (Manager.ActiveForm?.Equals(this?.Parent??this)??false)
+                    Manager.ActiveForm = null;
                 Form xform = OwnerForm ?? this.GetParentForm();
                 if (xform != null && !xform.IsDisposed)
                 {
@@ -208,21 +218,31 @@ namespace Forms.MetroBase
                     {
                         xform.Invoke(new MethodInvoker(() =>
                         {
-                            //xform.BringToFront();
+                            
                             xform.Focus();
                             xform.Select();
+                            xform.BringToFront();
                         }));
 
                     }
                     else
                     {
-                        //xform.BringToFront();
+                       
                         xform.Focus();
                         xform.Select();
+                        xform.BringToFront();
                     }
                 }
             }
             catch { }
+        }
+
+        private void MetroBaseForm_Activated(object sender, EventArgs e)
+        {
+            if(this.BorderStyle != MetroFormBorderStyle.None && AllowActivation)
+            {
+                Rpm.Productie.Manager.ActiveForm = this;
+            }
         }
     }
 }

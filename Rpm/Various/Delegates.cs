@@ -49,7 +49,7 @@ namespace Rpm.Various
     public delegate void ProgressChangedHandler(object sender, ProgressArg arg);
 
     public delegate void InstanceChangedHandler(object sender, object value);
-    public delegate bool IsValidHandler(object value, string filter, bool tempfilter = true);
+    public delegate bool IsValidHandler(object sender, object value, string filter, bool tempfilter = true);
 
     public delegate DialogResult RequestRespondDialogHandler(object sender, string message, string title,
         MessageBoxButtons buttons, MessageBoxIcon icon,

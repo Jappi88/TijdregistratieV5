@@ -8,18 +8,18 @@ using System.Windows.Forms;
 using Rpm.Misc;
 using Various;
 using WeifenLuo.WinFormsUI.Docking;
+using Forms.MetroBase;
 
 namespace Forms
 {
-    public partial class Producties : Form
+    public partial class Producties : BaseForm
     {
-        private readonly IWin32Window _owner;
-        public Producties(IWin32Window owner)
+       
+        public Producties(IWin32Window owner):base(owner)
         {
-            _owner = owner;
             InitializeComponent();
             InitDock();
-            
+            base.SaveLastInfo = true;
         }
 
         public void InitDock()
@@ -254,53 +254,6 @@ namespace Forms
             }
         }
 
-        private void Producties_Load(object sender, EventArgs e)
-        {
-            InitInfo();
-            //
-            //if (this.Parent == null)
-            //{
-            //    var xparent = this.GetParentForm();
-            //    if (xparent != null)
-            //    {
-            //        var y = (xparent.Location.Y + xparent.Height / 2) - this.Height / 2;
-            //        var x = (xparent.Location.X + xparent.Width / 2) - this.Width / 2;
-            //        if (Screen.GetWorkingArea(xparent).Contains(new Point(x, y)))
-            //            this.Location = new Point(x, y);
-            //        else this.StartPosition = FormStartPosition.CenterScreen;
-            //    }
-            //    else
-            //        this.StartPosition = FormStartPosition.CenterScreen;
-            //}
-            //else this.StartPosition = FormStartPosition.CenterParent;
-        }
 
-        private void InitInfo()
-        {
-            try
-            {
-                var par = ((Control)_owner)??this.GetParentForm();
-                if (par != null)
-                {
-                    par = par?.Parent?.FindForm() ?? par;
-                    var loc = par.Location;
-                    var x = (loc.X + (par.Width / 2)) - ((this.Width / 2));
-                    var y = (loc.Y + (par.Height / 2)) - ((this.Height / 2));
-                    this.Location = new Point(x, y);
-                    this.Invalidate();
-                }
-                this.InitLastInfo(false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        private void Producties_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.SetLastInfo();
-           // ((Control)_owner)?.BringToFront();
-        }
     }
 }

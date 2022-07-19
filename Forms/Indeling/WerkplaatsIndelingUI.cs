@@ -433,31 +433,38 @@ namespace Forms
                 //productieListControl1.InitProductie(Bewerkingen.Where(x => IsAllowed(x, SelectedWerkplek)).ToList(),
                 //    false, true, true, false);
                 //if (productieListControl1.DoSearch(SelectedWerkplek.Criteria))
+                productieListControl1.WindowName = SelectedWerkplek.Werkplek;
                 var sel = SelectedWerkplek.SelectedBewerking;
                 if (resetview)
                     productieListControl1.SetCurrentViewStates(new ViewState[0], false);
                 productieListControl1.ShowWaitUI = false;
                 var bws = Bewerkingen.GetRange(0, Bewerkingen.Count).Where(x => IsAllowed(x, SelectedWerkplek, false)).ToList();
                 productieListControl1.InitProductie(bws, false, true, true, false, false);
-                productieListControl1.InitProductie(true,
-                    true, true, false, true, true);
+                //productieListControl1.InitProductie(true,
+                //    true, true, false, true, true);
                 UpdateTitle(bws);
                 productieListControl1.DoSearch(SelectedWerkplek.Criteria);
                 productieListControl1.SelectedItem = sel;
                 productieListControl1.ShowWaitUI = true;
+               
             }
         }
 
-        private bool IsAllowed(object value, string filter, bool tempfilter)
+        private bool IsAllowed(object sender, object value, string filter, bool tempfilter)
         {
             if (value is IProductieBase bew)
             {
-                if (SelectedWerkplek == null)
+                var wp = SelectedWerkplek;
+                //if(sender is ProductieListControl list)
+                //{
+                //    wp = GetIndeling(list.WindowName);
+                //}
+                if (wp == null)
                 {
                     return true;
                 }
 
-                return IsAllowed(bew, SelectedWerkplek, tempfilter);
+                return IsAllowed(bew, wp, tempfilter);
             }
 
             return false;
@@ -521,6 +528,7 @@ namespace Forms
                 xpers.ToonSelectedKnoppen = expanded;
                 xpers.FieldTextGetter = IndelingFieldTextGetter;
                 xpers.ResetIndeling += Xpers_ResetIndeling;
+                xpers.UpdateIndeling += Xpers_UpdateIndeling;
                 //xgroup.Width = xpers.Width;
                 xpers.DragDrop += Xpers_DragDrop;
                 xgroup.MouseDown += xpers.IndelingMouseDown;
@@ -554,6 +562,21 @@ namespace Forms
             }
         }
 
+        private void Xpers_UpdateIndeling(object sender, EventArgs e)
+        {
+            try
+            {
+                if(sender is WerkplekIndeling indeling)
+                {
+                    UpdateIndeling(indeling,true);
+                }
+            }
+            catch (Exception ex)
+            {
+                XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
+            }
+        }
+
         private void Xpers_SettingsChanged(object sender, EventArgs e)
         {
            try
@@ -567,16 +590,16 @@ namespace Forms
                         var wp = bw.WerkPlekken?.FirstOrDefault(x => string.Equals(indeling.Werkplek, x.Naam, StringComparison.CurrentCultureIgnoreCase));
                         if (wp?.Tijden == null) continue;
                         wp.Tijden.SpecialeRoosters ??= new List<Rooster>();
-                        wp.Tijden.WerkRooster = indeling.Settings.WerkRooster;
+                        wp.Tijden.WerkRooster = indeling.Settings.WerkRooster.CreateCopy();
                         var xadd = wp.Tijden.SpecialeRoosters.Count > 0 ?
                             indeling.Settings.SpecialeRoosters?.Where(x => !wp.Tijden.SpecialeRoosters.Any(t => t.Vanaf.Date == x.Vanaf.Date)).ToList() :
                             indeling.Settings.SpecialeRoosters;
                         xadd ??= new List<Rooster>();
                         if (xadd.Count > 0)
                             wp.Tijden.SpecialeRoosters.AddRange(xadd);
-                        bw.xUpdateBewerking(null, $"[{wp.Path}] Rooster geupdate", true, false);
+                        bw.UpdateBewerking(null, $"[{wp.Path}] Rooster geupdate", true, false);
                     }
-                    UpdateIndeling(indeling, true);
+                    //UpdateIndeling(indeling, true);
                     //if (bws.Count > 0)
                     //{
                     //    var result = XMessageBox.Show(this, "Wilt u producties kiezen om de roosters te updaten?", "Roosters Updaten", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -735,7 +758,8 @@ namespace Forms
 
         private void SetSelected(WerkplekIndeling indeling, bool selected)
         {
-           
+            xBerekenDatumTimer.Stop();
+            xBerekenDatumTimer.Start();
             if (selected)
             {
                 indeling ??= GetIndeling(null);
@@ -754,12 +778,7 @@ namespace Forms
                 if (indeling != null)
                 {
                     indeling.IsSelected = true;
-                    indeling.UpdateWerkplekInfo();
-                    //if (indeling.Parent is GroupBox group)
-                    //{
-                    //    //group.Select();
-                    //    group.Focus();
-                    //}
+                    UpdateIndeling(indeling, true);
                 }
                 ListProducties(true);
             }
@@ -1026,9 +1045,9 @@ namespace Forms
                             //changed |= bw.WerkPlekken.Any(x => Bewerkingen[xindex].WerkPlekken.All(w => !string.Equals(w.Naam, x.Naam, StringComparison.CurrentCultureIgnoreCase)));
                             //var xbw = Bewerkingen.ElementAt(xindex);
                             //changed |= !bw.TheSameAs(xbw);
-                            bw.BerekentLeverDatum = Bewerkingen[xindex].BerekentLeverDatum;
+                           // bw.BerekentLeverDatum = Bewerkingen[xindex].BerekentLeverDatum;
                             Bewerkingen[xindex] = bw;
-                            changed = true;
+                            changed = false;
                         }
                         else
                         {
@@ -1085,31 +1104,47 @@ namespace Forms
         {
             try
             {
-
-                var bws = Bewerkingen.GetRange(0,Bewerkingen.Count).Where(bw => bw != null && (bw.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(bw, indeling, false)).ToList();
                 if (updategereed)
                 {
+                    xBerekenDatumTimer.Stop();
+                    BerekenLeverDatums(indeling);
 
-                    if (!indeling.IsDefault())
-                    {
-                        indeling.GereedOp = bws.OfType<IProductieBase>().ToList().BerekenLeverDatums(true, true, indeling.IsSelected);
-                    }
-
+                    xBerekenDatumTimer.Start();
                 }
-                indeling.UpdateWerkplekInfo();
-                if (indeling.IsSelected)
+                else
                 {
-                    UpdateTitle(bws);
-                    //if(productieListControl1.ProductieLijst.PrimarySortColumn != null && productieListControl1.ProductieLijst.PrimarySortColumn.AspectName == "BerekentLeverDatum")
-                    //{
-                    //    productieListControl1.ProductieLijst.Sort(productieListControl1.ProductieLijst.PrimarySortColumn);
-                    //}
+                    indeling.UpdateWerkplekInfo();
+                    if (indeling.IsSelected)
+                        UpdateTitle(null);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+        private void BerekenLeverDatums(WerkplekIndeling indeling)
+        {
+            try
+            {
+                List<Bewerking> bws = null;
+                if (!indeling.IsDefault())
+                {
+                    bws = Bewerkingen.GetRange(0, Bewerkingen.Count).Where(bw => bw != null && (bw.State is ProductieState.Gestopt or ProductieState.Gestart) && IsAllowed(bw, indeling, false)).ToList();
+                    indeling.GereedOp = bws.OfType<IProductieBase>().ToList().BerekenLeverDatums(true,true, true);
+                }
+                indeling.UpdateWerkplekInfo();
+                if (indeling.IsSelected)
+                {
+                    UpdateTitle(bws);
+                    if(productieListControl1.ProductieLijst.PrimarySortColumn?.AspectName != null && productieListControl1.ProductieLijst.PrimarySortColumn.AspectName.ToLower().Contains("berekentleverdatum"))
+                    {
+                        productieListControl1.ProductieLijst.Sort(productieListControl1.ProductieLijst.PrimarySortColumn);
+                    }
+                }
+            }
+            catch { }
         }
 
         private void Manager_OnFormulierDeleted(object sender, string id)
@@ -1317,6 +1352,7 @@ namespace Forms
         {
             if (_isbussy) return;
             _isbussy = true;
+            xBerekenDatumTimer.Stop();
             var prog = new LoadingForm();
             var arg = prog.Arg;
             arg.Message = "Indeling maken...";
@@ -1355,7 +1391,7 @@ namespace Forms
                         bw.ExcludeFromUpdate();
                         wp.Tijden.WerkRooster = xind.Settings?.WerkRooster;
                         wp.Tijden.SpecialeRoosters = xind.Settings?.SpecialeRoosters;
-                        _ = bw.xUpdateBewerking(null,
+                        _ = bw.UpdateBewerking(null,
                             $"[{wp.Naam}] Ingedeeld op {bw.Path}", true, false);
                         var ind = Bewerkingen.IndexOf(bw);
                         if (ind > -1)
@@ -1366,7 +1402,7 @@ namespace Forms
                 arg.Type = ProgressType.WriteCompleet;
                 arg.IsCanceled = true;
                 arg.OnChanged(this);
-            
+                Application.DoEvents();
                 UpdateIndelingen();
             }
             catch (Exception e)
@@ -1381,6 +1417,7 @@ namespace Forms
             try
             {
                 if (_isbussy) return;
+                xBerekenDatumTimer.Stop();
                 var prog = new LoadingForm();
                 var arg = prog.Arg;
                 arg.Message = "Indeling resetten...";
@@ -1408,7 +1445,7 @@ namespace Forms
                         if (removed > 0)
                         {
                             prod.Bewerking.ExcludeFromUpdate();
-                            _ = prod.Bewerking.xUpdateBewerking(null,
+                            _ = prod.Bewerking.UpdateBewerking(null,
                                 $"[{bw.Path}] Indeling gereset", true, false);
                             var ind = Bewerkingen.IndexOf(prod.Bewerking);
                             if (ind > -1)
@@ -1416,7 +1453,6 @@ namespace Forms
                             prod.Bewerking.RemoveExcludeFromUpdate();
                         }
                     }
-                   UpdateIndelingen();
                 }
                 catch (Exception e)
                 {
@@ -1426,6 +1462,8 @@ namespace Forms
                 arg.Type = ProgressType.WriteCompleet;
                 arg.IsCanceled = true;
                 arg.OnChanged(this);
+                Application.DoEvents();
+                UpdateIndelingen();
                 _isbussy = false;
             }
             catch (Exception ex)
@@ -1467,7 +1505,6 @@ namespace Forms
                 XMessageBox.Show(this, ex.Message, "Fout", MessageBoxIcon.Error);
             }
         }
-
 
         private void xupdatetimer_Tick(object sender, EventArgs e)
         {
@@ -1564,6 +1601,16 @@ namespace Forms
                         SetSelected(ind, true);
                     }
                 }
+            }
+        }
+
+        private void xBerekenDatumTimer_Tick(object sender, EventArgs e)
+        {
+            if (SelectedWerkplek != null && !SelectedWerkplek.IsDefault())
+            {
+                xBerekenDatumTimer.Stop();
+                BerekenLeverDatums(SelectedWerkplek);
+                xBerekenDatumTimer.Start();
             }
         }
     }

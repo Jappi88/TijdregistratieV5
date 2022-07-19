@@ -228,7 +228,7 @@ namespace Controls
                         if (prod?.Bewerkingen == null) 
                             continue;
                         foreach (var bw in prod.Bewerkingen)
-                            if (IsAllowed(bw, null))
+                            if (IsAllowed(this, bw, null))
                                 xbws.Add(bw);
                     }
 
@@ -288,7 +288,7 @@ namespace Controls
             UpdateStatus();
         }
 
-        private bool IsAllowed(object value, string filter, bool tempfilter = false)
+        private bool IsAllowed(object sender, object value, string filter, bool tempfilter = false)
         {
             if (IsDisposed || Disposing)
                 return false;
@@ -297,7 +297,7 @@ namespace Controls
             {
                 if (form.Bewerkingen == null || form.Bewerkingen.Length == 0)
                     return false;
-                return form.Bewerkingen.Any(x => IsAllowed(x, filter, tempfilter));
+                return form.Bewerkingen.Any(x => IsAllowed(sender, x, filter, tempfilter));
             }
 
             if (value is Bewerking bew)

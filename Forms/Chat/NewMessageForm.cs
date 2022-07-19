@@ -87,5 +87,13 @@ namespace Forms.Chat
         {
             this.MessageClicked?.Invoke(sender, EventArgs.Empty);
         }
+
+        private void NewMessageForm_Load(object sender, EventArgs e)
+        {
+            var x = Screen.PrimaryScreen.WorkingArea.Width - Width;
+            var y = Screen.PrimaryScreen.WorkingArea.Height - Height;
+
+            Location = new Point(x, y);
+        }
     }
 }

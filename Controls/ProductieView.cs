@@ -60,9 +60,6 @@ namespace Controls
                 _newmessage = new NewMessageForm();
                 _newmessage.MessageClicked += _newmessage_Click;
                 _newmessage.FormClosed += (x, y) => { _newmessage?.Dispose(); _newmessage = null; };
-                var xbound = Screen.FromControl(this).Bounds;
-                var xloc = new Point(xbound.Width - _newmessage.Width, xbound.Height - _newmessage.Height);
-                _newmessage.Location = xloc;
             }
         }
 
@@ -1744,15 +1741,29 @@ namespace Controls
 
         public void DoActie(object[] values, MainAktie type)
         {
-            if (InvokeRequired)
+            var f = Manager.ActiveForm ??this.FindForm();
+            if (f.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(() => DoActie(values, type)));
+                f.Invoke(new MethodInvoker(() => DoActie(values, type)));
             }
             else
             {
                 var flag = values is { Length: > 0 };
-                var xforms = Application.OpenForms.Cast<Form>().Where(x => x is Form_Alert).ToList();
-                xforms.ForEach(x => x.Close());
+                var xforms = Application.OpenForms.OfType<Form_Alert>().ToList();
+                xforms.ForEach(x =>
+                {
+                    //if (x.InvokeRequired)
+                    //    x.BeginInvoke(new Action(x.Close));
+                    //else
+                    try
+                    {
+                        x.Close();
+                    }
+                    catch (Exception ex)
+                    { 
+                        Console.WriteLine(ex); 
+                    }
+                });
                 switch (type)
                 {
                     case MainAktie.OpenProductie:
@@ -1768,7 +1779,7 @@ namespace Controls
                                 var par = values.OfType<Control>().ToList().FirstOrDefault();
                                 if (par?.Parent != null)
                                     par = par.Parent;
-                                ShowProductie(par??this, form, bew, playsound, index);
+                                ShowProductie(par??f, form, bew, playsound, index);
                             }
                         }
 
@@ -1827,8 +1838,8 @@ namespace Controls
                     case MainAktie.OpenAantalGemaaktProducties:
                         if (values.FirstOrDefault() is List<Bewerking> bws && values.LastOrDefault() is int mins)
                         {
-                            var form = Application.OpenForms.OfType<Control>().FirstOrDefault(x => x.Focused);
-                            DoAantalGemaakt(form??this, bws, mins);
+                            //var form = Application.OpenForms.OfType<Control>().FirstOrDefault(x => x.Focused);
+                            DoAantalGemaakt(Manager.ActiveForm??this?.FindForm(), bws, mins);
                         }
                         break;
                     case MainAktie.StartBewerking:
@@ -2866,12 +2877,14 @@ namespace Controls
             }
         }
 
-        public static ProductieLijstForm ShowProductieLijstForm(IWin32Window owner)
+        public static ProductieLijstForm ShowProductieLijstForm(IWin32Window owner, List<Bewerking> bws = null, string windowname = null, string lijstname = null, IsValidHandler handler = null)
         {
             try
             {
-                var prods = Manager.Database.xGetAllBewerkingen(false, true, false);
-                var prodform = new ProductieLijstForm(_Productelijsten.Count, prods);
+                var prods = bws??Manager.Database.xGetAllBewerkingen(false, true, false);
+                var prodform = string.IsNullOrEmpty(lijstname) ? new ProductieLijstForm(_Productelijsten.Count, prods) : new ProductieLijstForm(prods,lijstname);
+                prodform.WindowName = windowname;
+                prodform.ValidHandler = handler;
                // prodform.OwnerForm = ((Control)owner)?.FindForm();
                 prodform.FormClosing += AddProduction_FormClosing;
                 _Productelijsten.Add(prodform);
@@ -2880,7 +2893,8 @@ namespace Controls
                     _productielijstdock = new ProductieLijsten(owner)
                     {
                         Tag = prodform,
-                        StartPosition = FormStartPosition.CenterScreen
+                        StartPosition = FormStartPosition.CenterScreen,
+                        SaveLastInfo = true
                     };
                     _productielijstdock.FormClosed += (_, _) => _productielijstdock = null;
                 }

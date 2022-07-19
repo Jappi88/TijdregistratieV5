@@ -16,6 +16,8 @@ namespace Forms
     {
         public string ListName => productieListControl1?.ListName;
 
+        public string WindowName { get; set; }
+
         public IsValidHandler ValidHandler
         {
             get; set;
@@ -47,13 +49,13 @@ namespace Forms
             UpdateListName();
         }
 
-        public bool IsValidHandler(object value, string filter, bool tempfilter = false)
+        public bool IsValidHandler(object sender, object value, string filter, bool tempfilter = false)
         {
             if (value is Bewerking bew)
             {
                 var flag = _bewerkingen.IndexOf(bew) > -1;
                 if (ValidHandler != null)
-                    flag &= ValidHandler.Invoke(bew, filter, tempfilter);
+                    flag &= ValidHandler.Invoke(sender, bew, filter, tempfilter);
                 return flag;
             }
 
@@ -71,9 +73,9 @@ namespace Forms
 
         private void UpdateListName()
         {
-            var xname = productieListControl1.ListName;
+            var xname = WindowName??productieListControl1.ListName;
             var xitemcount = productieListControl1.ProductieLijst.Items.Count;
-            if (Manager.Opties?.Filters != null)
+            if (string.IsNullOrEmpty(WindowName) && Manager.Opties?.Filters != null)
             {
                 var name = xname;
                 var items = Manager.Opties.Filters.Where(x =>

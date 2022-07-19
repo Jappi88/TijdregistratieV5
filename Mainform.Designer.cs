@@ -178,7 +178,6 @@
             this.MinimumSize = new System.Drawing.Size(850, 600);
             this.Name = "Mainform";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ProductieManager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Mainform_FormClosing);
             this.Resize += new System.EventHandler(this.Mainform_Resize);

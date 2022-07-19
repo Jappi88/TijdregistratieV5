@@ -305,7 +305,7 @@ namespace Rpm.SqlLite
                     return new List<ProductieFormulier>();
                 var prods = new List<ProductieFormulier>();
                 if (filter && validhandler == null)
-                    validhandler = Functions.IsAllowed;
+                    validhandler = (x,y,s,z)=> Functions.IsAllowed(y as ProductieFormulier, s, z);
                 if (ProductieFormulieren != null) prods = ProductieFormulieren.FindAll(validhandler, checksecondary);
 
                 if (incgereed && GereedFormulieren != null)
@@ -325,7 +325,7 @@ namespace Rpm.SqlLite
                 return new List<ProductieFormulier>();
             var prods = new List<ProductieFormulier>();
             if (filter && validhandler == null)
-                validhandler = Functions.IsAllowed;
+                validhandler = (x, y, s, z) => Functions.IsAllowed(y as ProductieFormulier, s, z);
             if (ProductieFormulieren != null) prods = ProductieFormulieren.FindAll(validhandler, checksecondary);
 
             if (incgereed && GereedFormulieren != null)
@@ -466,7 +466,7 @@ namespace Rpm.SqlLite
                     {
                         if (filter && !bw.IsAllowed(null, state))
                             continue;
-                        if (validhandler != null && !validhandler.Invoke(bw, null)) continue;
+                        if (validhandler != null && !validhandler.Invoke(this,bw, null)) continue;
                         if (bereik != null && !bw.HeeftGewerkt(bereik)) continue;
                         bws.Add(bw);
                     }
