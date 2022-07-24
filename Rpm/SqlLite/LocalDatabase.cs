@@ -1745,6 +1745,8 @@ namespace Rpm.SqlLite
                     return "Bijlages";
                 case DbType.ProductieFormulieren:
                     return "Productie Formulieren";
+                case DbType.Verzoeken:
+                    return "Verzoeken";
                 case DbType.Alles:
                     return "RPM_Data";
             }
@@ -1790,6 +1792,8 @@ namespace Rpm.SqlLite
                     return DbType.Bijlages;
                 case "productie formulieren":
                     return DbType.ProductieFormulieren;
+                case "verzoeken":
+                    return DbType.Verzoeken;
                 case "rpm_data":
                     return DbType.Alles;
             }
@@ -2029,23 +2033,23 @@ namespace Rpm.SqlLite
 
                     return count;
                 case DbType.Opmerkingen:
-                    break;
+                    return Manager.Opmerkingen?.OpmerkingenLijst?.Count ?? 0;
                 case DbType.Klachten:
-                    break;
+                    return Manager.Klachten?.Database?.Count() ?? 0;
                 case DbType.Verpakkingen:
-                    break;
+                    return Manager.Verpakkingen?.Database?.Count() ?? 0;
                 case DbType.ArtikelRecords:
-                    break;
+                    return Manager.ArtikelRecords?.Database?.Count() ?? 0;
                 case DbType.SpoorOverzicht:
-                    break;
+                    return Manager.SporenBeheer?.Database?.Count() ?? 0;
                 case DbType.LijstLayouts:
-                    break;
+                    return Manager.ListLayouts?.Database?.Count() ?? 0;
                 case DbType.MeldingCenter:
-                    break;
+                    return Manager.Meldingen?.Database?.Count() ?? 0;
                 case DbType.Bijlages:
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                case DbType.Verzoeken:
+                    return Manager.Verzoeken?.Database?.Count() ?? 0;
             }
 
             return 0;

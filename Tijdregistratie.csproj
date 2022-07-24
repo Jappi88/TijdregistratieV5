@@ -63,7 +63,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -530,6 +530,30 @@
     </Compile>
     <Compile Include="Forms\PDFCreator\PDFCreatorForm.Designer.cs">
       <DependentUpon>PDFCreatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\NewVerzoekForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\NewVerzoekForm.Designer.cs">
+      <DependentUpon>NewVerzoekForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekNotificatieForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekNotificatieForm.Designer.cs">
+      <DependentUpon>VerzoekNotificatieForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekForm.Designer.cs">
+      <DependentUpon>VerzoekForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PersoneelVerzoek\VerzoekUI.Designer.cs">
+      <DependentUpon>VerzoekUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProductieOverzicht\ProductieDatumOvericht.cs">
       <SubType>Form</SubType>
@@ -1585,6 +1609,8 @@
     <Compile Include="Rpm\Various\ProductieChat.cs" />
     <Compile Include="Rpm\Various\ProductieChatEntry.cs" />
     <Compile Include="Rpm\Various\UserChat.cs" />
+    <Compile Include="Rpm\Verzoeken\VerzoekBeheer.cs" />
+    <Compile Include="Rpm\Verzoeken\VerzoekEntry.cs" />
     <Compile Include="Rpm\ViewModels\PersoneelModel.cs" />
     <Compile Include="Rpm\ViewModels\SettingModel.cs" />
     <Compile Include="Rpm\ViewModels\TaakModel.cs" />
@@ -1840,6 +1866,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PDFCreator\PDFCreatorForm.resx">
       <DependentUpon>PDFCreatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelVerzoek\NewVerzoekForm.resx">
+      <DependentUpon>NewVerzoekForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelVerzoek\VerzoekNotificatieForm.resx">
+      <DependentUpon>VerzoekNotificatieForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelVerzoek\VerzoekForm.resx">
+      <DependentUpon>VerzoekForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PersoneelVerzoek\VerzoekUI.resx">
+      <DependentUpon>VerzoekUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProductieOverzicht\ProductieDatumOvericht.resx">
       <DependentUpon>ProductieDatumOvericht.cs</DependentUpon>
@@ -2323,6 +2361,10 @@
     <None Include="Resources\logo-vanderValk.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\transfer_man_128x128.png" />
+    <None Include="Resources\cancel_stop_exit_64x64.png" />
+    <None Include="Resources\transfer_man_64x64.png" />
+    <None Include="Resources\transfer_man_32x32.png" />
     <None Include="Resources\zoomout_32x32.png" />
     <None Include="Resources\zoomin_32x32.png" />
     <None Include="Resources\page_remove_12862.png" />

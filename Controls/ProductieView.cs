@@ -3,15 +3,18 @@ using Forms;
 using Forms.Aantal;
 using Forms.Activiteit;
 using Forms.ArtikelRecords;
+using Forms.Chat;
 using Forms.Excel;
+using Forms.PersoneelVerzoek;
 using Forms.Sporen;
+using Forms.Verzoeken;
 using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using ProductieManager.Forms;
-using Forms.Chat;
 using ProductieManager.Properties;
 using ProductieManager.Rpm.Misc;
+using ProductieManager.Rpm.Various;
 using Rpm.Controls;
 using Rpm.DailyUpdate;
 using Rpm.Mailing;
@@ -20,6 +23,7 @@ using Rpm.Productie;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
+using Rpm.Verzoeken;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,7 +44,7 @@ namespace Controls
         public ProductieView()
         {
             InitializeComponent();
-            _specialRoosterWatcher = new Timer();
+            _specialRoosterWatcher = new System.Windows.Forms.Timer();
             _specialRoosterWatcher.Interval = 60000; //1 minuut;
             _specialRoosterWatcher.Tick += (_, _) => CheckForSpecialRooster(false);
             DailyMessage = new Daily
@@ -53,25 +57,98 @@ namespace Controls
             DailyMessage.DailyCreated += DailyMessage_DailyCreated;
         }
 
-        private void InitMessageForm()
+        public Point GetNotificationLocation(Form form)
         {
+            try
+            {
+                if (form == null) return new Point();
+                var x = Screen.PrimaryScreen.WorkingArea.Width - form.Width;
+                var y = Screen.PrimaryScreen.WorkingArea.Height - form.Height;
+                var index = NotificationWindows.IndexOf(form);
+                for (int i = 0; i < index; i++)
+                {
+                    var height = NotificationWindows[i].Height;
+                    if (y - height < 0)
+                    {
+                        x -= NotificationWindows.OrderBy(x => x.Width).Last()?.Width ?? 0;
+                        y = Screen.PrimaryScreen.WorkingArea.Height - Height;
+                        continue;
+                    }
+                    y -= height;
+                }
+                return new Point(x, y);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new Point();
+            }
+        }
+
+        private NewMessageForm InitMessageForm(ProductieChatEntry[] entries)
+        {
+            var _newmessage = NotificationWindows.OfType<NewMessageForm>().FirstOrDefault();
             if(_newmessage == null)
             {
                 _newmessage = new NewMessageForm();
                 _newmessage.MessageClicked += _newmessage_Click;
-                _newmessage.FormClosed += (x, y) => { _newmessage?.Dispose(); _newmessage = null; };
+                _newmessage.FormClosed += _newmessage_Close;
+                NotificationWindows.Add(_newmessage);
+            }
+            _newmessage.InitMessages(entries);
+            _newmessage.Location = GetNotificationLocation(_newmessage);
+            return _newmessage;
+        }
+
+        private VerzoekNotificatieForm InitVerzoekenForm(VerzoekEntry[] entries)
+        {
+            var _verz = NotificationWindows.OfType<VerzoekNotificatieForm>().FirstOrDefault();
+            if (_verz == null)
+            {
+                _verz = new VerzoekNotificatieForm();
+                _verz.MessageClicked += _verz_MessageClicked;
+                _verz.FormClosed += _newmessage_Close;
+                NotificationWindows.Add(_verz);
+            }
+            _verz.InitVerzoeken(entries);
+            _verz.Location = GetNotificationLocation(_verz);
+            _verz.StartPosition = FormStartPosition.Manual;
+            return _verz;
+        }
+
+        private void _verz_MessageClicked(object sender, EventArgs e)
+        {
+            if(sender is VerzoekNotificatieForm verz)
+            {
+                verz.Close();
+               var result = XMessageBox.Show(this, $"{verz.MessageText}", verz.TitleLabel.Text, MessageBoxButtons.OK, Resources.transfer_man_128x128, MetroColorStyle.Purple);
+                if (result == DialogResult.OK && Manager.Verzoeken?.Database != null && Manager.Verzoeken.Database.CanRead)
+                {
+                    for (int i = 0; i < verz.Verzoeken.Length; i++)
+                    {
+                        var vr = verz.Verzoeken[i];
+                        if (!vr.IsRead())
+                        {
+                            vr.SetRead(true);
+                            Manager.Verzoeken.UpdateVerzoek(vr);
+                        }
+                    }
+                }
             }
         }
 
         private void _newmessage_Close(object sender, EventArgs e)
         {
-            if (_newmessage != null)
-                xViewPanel.Controls.Remove(_newmessage);
+            if(sender is Form form)
+            {
+                form.Dispose();
+                NotificationWindows.RemoveAll(x => x.Equals(form));
+            }
         }
 
         private void _newmessage_Click(object sender, EventArgs e)
         {
-            if (_newmessage != null)
+            if (sender is NewMessageForm _newmessage)
             {
                 var names = new List<string>();
                 var unread = _newmessage.Messages;
@@ -145,9 +222,9 @@ namespace Controls
 
         #region Variables
 
-        private readonly Timer _specialRoosterWatcher;
+        private readonly System.Windows.Forms.Timer _specialRoosterWatcher;
         public static Manager _manager;
-        private NewMessageForm _newmessage;
+        private List<Form> NotificationWindows { get; set; } = new List<Form>();
 
         public int ProductieRefreshInterval { get; set; } = 10000; // 10 sec
 
@@ -1167,6 +1244,7 @@ namespace Controls
                             InitDBCorupptedMonitor();
                             DailyMessage.CreateDaily();
                             UpdateUnreadMessages();
+                            UpdateUnreadVerzoeken();
                             UpdateUnreadOpmerkingen();
                             if (Manager.Opties is { ToonPersoneelIndelingNaOpstart: true })
                                 ShowPersoneelIndelingWindow(this);
@@ -1216,6 +1294,9 @@ namespace Controls
 
             Manager.VerpakkingChanged += Manager_VerpakkingChanged; 
             Manager.VerpakkingDeleted += Manager_VerpakkingDeleted;
+
+            Manager.VerzoekChanged += Manager_VerzoekChanged;
+            Manager.VerzoekDeleted += Manager_VerzoekChanged;
 
             Manager.RequestRespondDialog += Manager_RequestRespondDialog;
 
@@ -1403,8 +1484,16 @@ namespace Controls
 
             Manager.VerpakkingChanged -= Manager_VerpakkingChanged;
             Manager.VerpakkingDeleted -= Manager_VerpakkingDeleted;
+
+            Manager.VerzoekChanged -= Manager_VerzoekChanged;
+            Manager.VerzoekDeleted -= Manager_VerzoekChanged;
             if (_manager != null)
                 _manager.OnShutdown -= _manager_OnShutdown;
+        }
+
+        private void Manager_VerzoekChanged(object sender, FileSystemEventArgs e)
+        {
+            UpdateUnreadVerzoeken();
         }
 
         public void CloseUI()
@@ -1690,6 +1779,7 @@ namespace Controls
                     xloginb.Image = user != null ? Resources.Logout_37127__1_ : Resources.Login_37128__1_;
                     xcorruptedfilesbutton.Visible = user is {AccesLevel: AccesType.Manager};
                     xMissingTekening.Visible = user is { AccesLevel: AccesType.Manager };
+                    xVerzoeken.Visible = user is { AccesLevel: > AccesType.ProductieBasis };
                     bool flag = user == null || Manager.ProductieChat?.Chat == null || !string.Equals(Manager.ProductieChat?.Chat?.UserName, user?.Username, StringComparison.CurrentCultureIgnoreCase);
                     if (flag)
                     {
@@ -1704,6 +1794,8 @@ namespace Controls
                     }
                     OnLoginChanged?.Invoke(user, instance);
                 }));
+                if (user is { AccesLevel: > AccesType.ProductieBasis })
+                    UpdateUnreadVerzoeken();
             }
             catch (Exception e)
             {
@@ -2351,10 +2443,10 @@ namespace Controls
             xmats.ShowDialog(this);
         }
 
-        private void xsendemail_Click(object sender, EventArgs e)
+        private void xVerzoeken_Click(object sender, EventArgs e)
         {
-            var emailform = new SendEmailForm();
-            emailform.ShowDialog(this);
+            var verz = new VerzoekForm();
+            verz.ShowDialog(this);
         }
 
         private void xallenotities_Click(object sender, EventArgs e)
@@ -2424,6 +2516,11 @@ namespace Controls
         #endregion Control Events
 
         #region Methods
+
+        public void ShowNotificationWindow(Form form)
+        {
+
+        }
         
         private void CheckForSpecialRooster(bool prompchange)
         {
@@ -2690,10 +2787,9 @@ namespace Controls
                 if (Manager.Opties is not { ToonNieweChatBerichtMelding: true }) return;
                 if (unread.Count > 0)
                 {
-                    InitMessageForm();
+                    var _newmessage = InitMessageForm(unread.ToArray());
                     if(_newmessage != null)
                     {
-                        _newmessage.InitMessages(unread.ToArray());
                         if(!_newmessage.Visible)
                         {
                             _newmessage.Show();
@@ -2721,11 +2817,11 @@ namespace Controls
                                 if (tb != null)
                                 {
                                     metroCustomTabControl1.SelectedTab = tb;
-                                    var xch = tb.Controls.OfType<ProductieChatUI>().FirstOrDefault();
-                                    if (xch != null)
-                                    {
-                                        xch.SetSelected(unread?.FirstOrDefault()?.Afzender?.UserName);
-                                    }
+                                    //var xch = tb.Controls.OfType<ProductieChatUI>().FirstOrDefault();
+                                    //if (xch != null)
+                                    //{
+                                    //    xch.SetSelected(unread?.FirstOrDefault()?.Afzender?.UserName);
+                                    //}
                                 }
                                 metroCustomTabControl1.Select();
                                 metroCustomTabControl1.Focus();
@@ -2735,6 +2831,7 @@ namespace Controls
                 }
                 else
                 {
+                    var _newmessage = NotificationWindows.OfType<NewMessageForm>().FirstOrDefault();
                     if (_newmessage != null && _newmessage.Visible)
                     {
                         _newmessage.Close();
@@ -2798,6 +2895,85 @@ namespace Controls
                     xmsgBox.Dispose();
                     if (result == DialogResult.Yes)
                         ShowOpmerkingWindow(this);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void UpdateUnreadVerzoeken()
+        {
+            if (InvokeRequired)
+                BeginInvoke(new Action(xUpdateUnreadVerzoeken));
+            else xUpdateUnreadVerzoeken();
+        }
+
+        private void xUpdateUnreadVerzoeken()
+        {
+            try
+            {
+                if (Manager.Verzoeken?.Database == null || !Manager.Verzoeken.Database.CanRead) return;
+                var unread = Manager.Verzoeken.GetUnreadEntries();
+                var xtile = tileMainView1.GetTile("xverzoeken");
+                if (unread.Count > 0)
+                {
+                    var ximg = GraphicsExtensions.DrawUserCircle(new Size(32, 32), Brushes.White,
+                        unread.Count.ToString(),
+                        new Font("Ariel", 16, FontStyle.Bold), Color.DarkRed);
+                    xVerzoeken.Image = Resources.transfer_man_32x32.CombineImage(ximg, 1.75);
+                   
+                    if (xtile is { Tag: TileInfoEntry entry })
+                    {
+                        entry.TileCount = unread.Count;
+                        entry.SecondaryImage = ximg;
+                        xtile.UpdateTile(entry);
+                    }
+                    if (unread.Any(x => !x.IsRead()) || Manager.LogedInGebruiker is { AccesLevel: AccesType.Manager })
+                    {
+                        var _newmessage = InitVerzoekenForm(unread.ToArray());
+                        if (_newmessage != null)
+                        {
+                            if (!_newmessage.Visible)
+                            {
+                                _newmessage.Show();
+                            }
+                            _newmessage.BringToFront();
+                            var f = xViewPanel.FindForm();
+                            if (f != null)
+                            {
+                                if (f.WindowState == FormWindowState.Minimized)
+                                    f.WindowState = FormWindowState.Normal;
+                                f.BringToFront();
+                                f.Focus();
+                                f.Select();
+
+                                var tb = metroCustomTabControl1.TabPages.OfType<MetroTabPage>().ToList().FirstOrDefault(x => x.Tag is TileInfoEntry ent && ent.Name.ToLower().StartsWith("xverzoeken"));
+                                if (tb != null)
+                                {
+                                    metroCustomTabControl1.SelectedTab = tb;
+                                }
+                                metroCustomTabControl1.Select();
+                                metroCustomTabControl1.Focus();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    xVerzoeken.Image = Resources.transfer_man_32x32;
+                    if (xtile is { Tag: TileInfoEntry entry })
+                    {
+                        entry.TileCount = 0;
+                        entry.SecondaryImage = null;
+                        xtile.UpdateTile(entry);
+                    }
+                    var _newmessage = NotificationWindows.Count > 0 ? NotificationWindows.OfType<VerzoekNotificatieForm>().First() : null;
+                    if (_newmessage != null && _newmessage.Visible)
+                    {
+                        _newmessage.Close();
+                    }
                 }
             }
             catch (Exception e)

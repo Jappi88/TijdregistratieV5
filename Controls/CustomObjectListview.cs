@@ -20,6 +20,7 @@ namespace Controls
         public CustomObjectListview()
         {
             InitializeComponent();
+            this.Scrollable = true;
             xloadinglabel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
             xloadinglabel.Size = this.Size;
             this.Controls.Add(xloadinglabel);

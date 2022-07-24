@@ -7,12 +7,14 @@ using ProductieManager.Rpm.Settings;
 using ProductieManager.Rpm.Various;
 using Rpm.Klachten;
 using Rpm.Mailing;
+using Rpm.MeldingCenter;
 using Rpm.Misc;
 using Rpm.Opmerking;
 using Rpm.Productie.Verpakking;
 using Rpm.Settings;
 using Rpm.SqlLite;
 using Rpm.Various;
+using Rpm.Verzoeken;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,8 +25,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProductieManager.Rpm.Mailing;
-using Rpm.MeldingCenter;
 using Timer = System.Timers.Timer;
 
 namespace Rpm.Productie
@@ -50,7 +50,7 @@ namespace Rpm.Productie
         public static SporenBeheer SporenBeheer { get; private set; }
         public static KlachtBeheer Klachten { get; private set; }
         public static ListLayoutBeheer ListLayouts { get; private set; }
-        public static EmailServer MailServer { get; private set; }
+       // public static EmailServer MailServer { get; private set; }
         /// <summary>
         /// De productiechat
         /// </summary>
@@ -68,6 +68,7 @@ namespace Rpm.Productie
         /// </summary>
         public static Opmerkingen Opmerkingen { get; private set; }
         public static MeldingCenter.MeldingBeheer Meldingen { get; private set; }
+        public static VerzoekBeheer Verzoeken { get; private set; }
         /// <summary>
         /// De productieprovider zorgt ervoor dat altijd je altijd de actuele infomatie krijgt.
         /// </summary>
@@ -269,7 +270,7 @@ namespace Rpm.Productie
                     {
                         LoggerEnabled = LoggerEnabled,
                         NotificationEnabled = false
-                    }; 
+                    };
                     Database.LoadMultiFiles();
                     ProductieChat = new ProductieChat(Path.Combine(DbPath, "Chat"));
                     ProductieProvider = new ProductieProvider();
@@ -292,6 +293,10 @@ namespace Rpm.Productie
                     ListLayouts.LayoutChanged += OnLayoutChanged;
                     ListLayouts.LayoutDeleted += OnLayoutDeleted;
 
+                    Verzoeken = new VerzoekBeheer(DbPath);
+                    Verzoeken.VerzoekChanged += OnVerzoekChanged;
+                    Verzoeken.VerzoekDeleted += OnVerzoekDeleted;
+
                     DbUpdater = new DatabaseUpdater();
                     BackupInfo = BackupInfo.Load();
                     BewerkingenLijst = new BewerkingLijst();
@@ -306,7 +311,7 @@ namespace Rpm.Productie
                     if (autologin)
                         autologin = xAutoLogin(this);
                     if (loadsettings && !autologin)
-                        _=LoadSettings(this, raiseManagerLoadingEvents);
+                        _ = LoadSettings(this, raiseManagerLoadingEvents);
 
                     if (loadsettings)
                     {
@@ -314,7 +319,7 @@ namespace Rpm.Productie
                         ArtikelRecords = new ArtikelRecords.ArtikelRecords(DbPath);
                         Opmerkingen = new Opmerkingen();
                         Opmerkingen.OnOpmerkingenChanged += Opmerkingen_OnOpmerkingenChanged;
-                        _= Opmerkingen.Load();
+                        _ = Opmerkingen.Load();
                         ProductieProvider?.InitOfflineDb();
                     }
 
@@ -333,11 +338,6 @@ namespace Rpm.Productie
                     return false;
                 }
             });
-        }
-
-        private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
-        {
-            OnOpmerkingenChanged();
         }
 
         #endregion Manager Init
@@ -2304,6 +2304,23 @@ namespace Rpm.Productie
             SpoorDeleted?.Invoke(sender, e);
         }
 
+        public static event FileSystemEventHandler VerzoekDeleted;
+        public static void OnVerzoekDeleted(object sender, FileSystemEventArgs e)
+        {
+            VerzoekDeleted?.Invoke(sender, e);
+        }
+
+        public static event FileSystemEventHandler VerzoekChanged;
+        public static void OnVerzoekChanged(object sender, FileSystemEventArgs e)
+        {
+           VerzoekChanged?.Invoke(sender, e);
+        }
+
+        private void Opmerkingen_OnOpmerkingenChanged(object sender, EventArgs e)
+        {
+            OnOpmerkingenChanged();
+        }
+
         #region Threadsafe RespondMessage
 
         private static object _messageLocker = new();
@@ -2402,7 +2419,8 @@ namespace Rpm.Productie
             SporenBeheer?.Dispose();
             ArtikelRecords?.Dispose();
             ListLayouts?.Dispose();
-            MailServer?.Stop();
+            Verzoeken?.Close();
+            //MailServer?.Stop();
             Meldingen?.Dispose();
         }
 

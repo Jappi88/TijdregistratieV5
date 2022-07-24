@@ -19,6 +19,7 @@
         MeldingCenter,
         Bijlages,
         ProductieFormulieren,
+        Verzoeken,
         Alles,
         Geen
     }

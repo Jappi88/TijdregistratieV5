@@ -19,7 +19,7 @@ namespace ProductieManager.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -376,6 +376,16 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap cancel_stop_exit_1583 {
             get {
                 object obj = ResourceManager.GetObject("cancel_stop_exit_1583", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap cancel_stop_exit_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("cancel_stop_exit_64x64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2489,6 +2499,36 @@ namespace ProductieManager.Properties {
         internal static System.Drawing.Bitmap time_management_tasks_96x96 {
             get {
                 object obj = ResourceManager.GetObject("time_management_tasks_96x96", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap transfer_man_128x128 {
+            get {
+                object obj = ResourceManager.GetObject("transfer_man_128x128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap transfer_man_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("transfer_man_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap transfer_man_64x64 {
+            get {
+                object obj = ResourceManager.GetObject("transfer_man_64x64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

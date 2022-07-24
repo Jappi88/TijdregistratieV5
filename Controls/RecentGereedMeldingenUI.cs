@@ -319,50 +319,56 @@ namespace Controls
         private void UpdateStatus()
         {
             if (IsDisposed || Disposing) return;
-            if (InvokeRequired)
+            try
             {
-                this.Invoke(new MethodInvoker(UpdateStatus));
-                return;
+                if (InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(UpdateStatus));
+                    return;
+                }
+                if (IsDisposed || Disposing) return;
+                var count = productieListControl1?.ProductieLijst?.Items.Count ?? 0;
+                //var count = bws?.Count ?? 0;
+                var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
+                var tijd = Bereik.Stop < Bereik.Start ? new TimeSpan() : Bereik.Stop - Bereik.Start;
+                var uur = tijd.Hours;
+                var min = tijd.Minutes;
+                var sec = tijd.Seconds;
+                var dagen = (int)tijd.TotalDays;
+                var weken = dagen >= 7 ? dagen / 7 : 0;
+                dagen = dagen - weken * 7;
+                var weekt = weken == 1 ? "week" : "weken";
+                var dagt = dagen == 1 ? "dag" : "dagen";
+                var xvals = new List<string>();
+                if (weken > 0)
+                    xvals.Add($"{weken} {weekt}");
+                if (dagen > 0)
+                    xvals.Add($"{dagen} {dagt}");
+                if (uur > 0)
+                    xvals.Add($"{uur} uur");
+                if (min > 0)
+                    xvals.Add($"{min} {(min == 1 ? "minuut" : "minuten")}");
+                if (sec > 0 || xvals.Count == 0)
+                    xvals.Add($"{sec} seconden");
+
+                var xmsg = $"{count} {x1} van de afgelopen ";
+                for (var i = 0; i < xvals.Count; i++)
+                    if (i > 0)
+                    {
+                        if (i == xvals.Count - 1)
+                            xmsg += $" en {xvals[i]}";
+                        else xmsg += $", {xvals[i]}";
+                    }
+                    else
+                    {
+                        xmsg += xvals[i];
+                    }
+
+                xstatus.Text = xmsg + ".";
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
-            if (IsDisposed || Disposing) return;
-            var count = productieListControl1?.ProductieLijst?.Items.Count ?? 0;
-            //var count = bws?.Count ?? 0;
-            var x1 = count == 1 ? "Gereedmelding" : "Gereedmeldingen";
-            var tijd = Bereik.Stop < Bereik.Start ? new TimeSpan() : Bereik.Stop - Bereik.Start;
-            var uur = tijd.Hours;
-            var min = tijd.Minutes;
-            var sec = tijd.Seconds;
-            var dagen = (int)tijd.TotalDays;
-            var weken = dagen >= 7 ? dagen / 7 : 0;
-            dagen = dagen - weken * 7;
-            var weekt = weken == 1 ? "week" : "weken";
-            var dagt = dagen == 1 ? "dag" : "dagen";
-            var xvals = new List<string>();
-            if (weken > 0)
-                xvals.Add($"{weken} {weekt}");
-            if (dagen > 0)
-                xvals.Add($"{dagen} {dagt}");
-            if (uur > 0)
-                xvals.Add($"{uur} uur");
-            if (min > 0)
-                xvals.Add($"{min} {(min == 1 ? "minuut" : "minuten")}");
-            if (sec > 0 || xvals.Count == 0)
-                xvals.Add($"{sec} seconden");
-
-            var xmsg = $"{count} {x1} van de afgelopen ";
-            for (var i = 0; i < xvals.Count; i++)
-                if (i > 0)
-                {
-                    if (i == xvals.Count - 1)
-                        xmsg += $" en {xvals[i]}";
-                    else xmsg += $", {xvals[i]}";
-                }
-                else
-                {
-                    xmsg += xvals[i];
-                }
-
-            xstatus.Text = xmsg + ".";
         }
 
         protected virtual void OnItemCountChanged()

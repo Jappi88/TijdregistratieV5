@@ -178,6 +178,9 @@ namespace Rpm.SqlLite
                             case DbType.ProductieFormulieren:
                                 xret.Add("Productie Formulieren");
                                 break;
+                            case DbType.Verzoeken:
+                                xret.Add("Verzoeken");
+                                break;
                         }
                     }
                 }

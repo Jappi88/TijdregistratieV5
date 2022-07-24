@@ -59,12 +59,12 @@ namespace Controls
             this.xToolButtons = new System.Windows.Forms.ToolStrip();
             this.xbehpersoneel = new System.Windows.Forms.ToolStripButton();
             this.xbehvaardigheden = new System.Windows.Forms.ToolStripButton();
+            this.xVerzoeken = new System.Windows.Forms.ToolStripButton();
             this.xonderbrekeningen = new System.Windows.Forms.ToolStripButton();
             this.xdbbewerkingen = new System.Windows.Forms.ToolStripButton();
             this.xoverzicht = new System.Windows.Forms.ToolStripButton();
             this.xmateriaalverbruikb = new System.Windows.Forms.ToolStripButton();
             this.xupdateallform = new System.Windows.Forms.ToolStripButton();
-            this.xsendemail = new System.Windows.Forms.ToolStripButton();
             this.xallenotities = new System.Windows.Forms.ToolStripButton();
             this.xchatformbutton = new System.Windows.Forms.ToolStripButton();
             this.xproductieoverzichtb = new System.Windows.Forms.ToolStripButton();
@@ -185,12 +185,12 @@ namespace Controls
             this.xToolButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xbehpersoneel,
             this.xbehvaardigheden,
+            this.xVerzoeken,
             this.xonderbrekeningen,
             this.xdbbewerkingen,
             this.xoverzicht,
             this.xmateriaalverbruikb,
             this.xupdateallform,
-            this.xsendemail,
             this.xallenotities,
             this.xchatformbutton,
             this.xproductieoverzichtb,
@@ -242,6 +242,18 @@ namespace Controls
             this.xbehvaardigheden.Size = new System.Drawing.Size(36, 36);
             this.xbehvaardigheden.ToolTipText = "Toon alle vaardigheden";
             this.xbehvaardigheden.Click += new System.EventHandler(this.xallevaardighedenb_Click);
+            // 
+            // xVerzoeken
+            // 
+            this.xVerzoeken.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.xVerzoeken.Image = global::ProductieManager.Properties.Resources.transfer_man_32x32;
+            this.xVerzoeken.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.xVerzoeken.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.xVerzoeken.Name = "xVerzoeken";
+            this.xVerzoeken.Size = new System.Drawing.Size(36, 36);
+            this.xVerzoeken.ToolTipText = "Personeel Verzoeken";
+            this.xVerzoeken.Visible = false;
+            this.xVerzoeken.Click += new System.EventHandler(this.xVerzoeken_Click);
             // 
             // xonderbrekeningen
             // 
@@ -297,17 +309,6 @@ namespace Controls
             this.xupdateallform.Size = new System.Drawing.Size(36, 36);
             this.xupdateallform.ToolTipText = "Update alle producties";
             this.xupdateallform.Click += new System.EventHandler(this.xupdateallform_Click);
-            // 
-            // xsendemail
-            // 
-            this.xsendemail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.xsendemail.Image = global::ProductieManager.Properties.Resources.email_18961;
-            this.xsendemail.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.xsendemail.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.xsendemail.Name = "xsendemail";
-            this.xsendemail.Size = new System.Drawing.Size(36, 36);
-            this.xsendemail.ToolTipText = "Verzend een email";
-            this.xsendemail.Click += new System.EventHandler(this.xsendemail_Click);
             // 
             // xallenotities
             // 
@@ -1271,7 +1272,7 @@ namespace Controls
         private ToolStripButton xoverzicht;
         private ToolStripButton xmateriaalverbruikb;
         private ToolStripButton xupdateallform;
-        private ToolStripButton xsendemail;
+        private ToolStripButton xVerzoeken;
         private ToolStripButton xallenotities;
         private ToolStripButton xchatformbutton;
         private ToolStripButton xproductieoverzichtb;

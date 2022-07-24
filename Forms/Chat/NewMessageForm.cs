@@ -52,7 +52,7 @@ namespace Forms.Chat
 
         private void xMain_Click(object sender, EventArgs e)
         {
-            OnMessageClicked(sender);
+            OnMessageClicked(this);
         }
 
         private void xMain_MouseEnter(object sender, EventArgs e)
@@ -86,14 +86,6 @@ namespace Forms.Chat
         protected virtual void OnMessageClicked(object sender)
         {
             this.MessageClicked?.Invoke(sender, EventArgs.Empty);
-        }
-
-        private void NewMessageForm_Load(object sender, EventArgs e)
-        {
-            var x = Screen.PrimaryScreen.WorkingArea.Width - Width;
-            var y = Screen.PrimaryScreen.WorkingArea.Height - Height;
-
-            Location = new Point(x, y);
         }
     }
 }

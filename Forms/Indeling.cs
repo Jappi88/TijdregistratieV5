@@ -1038,7 +1038,7 @@ namespace Forms
                     if (plek.AantalGemaakt > xnewwp.AantalGemaakt)
                         xnewwp.AantalGemaakt = plek.AantalGemaakt;
                     Bewerking.WerkPlekken.Remove(plek);
-                    plek = xnewwp;
+                    werkplek = xnewwp.Naam;
                 }
                 else if (plek.Personen.Count > 0)
                 {
@@ -1048,11 +1048,9 @@ namespace Forms
                         per.WerktAanKlus(plekpath, out var klus);
                         if (klus != null) klus.WerkPlek = werkplek;
                         per.Werkplek = werkplek;
-                    }
-
-                    plek.Naam = werkplek;
+                    }                  
                 }
-
+                plek.Naam = werkplek;
                 LoadWerkPlekken(plek);
                 //LoadShifts();
                 //xwerkplekken.SelectedObject = plek;

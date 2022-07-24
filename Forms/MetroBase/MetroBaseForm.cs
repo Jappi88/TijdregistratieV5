@@ -195,7 +195,7 @@ namespace Forms.MetroBase
             base.Show();
         }
 
-        private void MetroBaseForm_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void MetroBaseForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (SaveLastSize)
                 this.SetLastInfo();
@@ -241,7 +241,7 @@ namespace Forms.MetroBase
         {
             if(this.BorderStyle != MetroFormBorderStyle.None && AllowActivation)
             {
-                Rpm.Productie.Manager.ActiveForm = this;
+                Manager.ActiveForm = this;
             }
         }
     }

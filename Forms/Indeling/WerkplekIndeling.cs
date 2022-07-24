@@ -7,6 +7,7 @@ using Rpm.Settings;
 using Rpm.Various;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -231,6 +232,7 @@ namespace Controls
             {
                 if (e.Data.GetData("Producties") is ArrayList xdata)
                 {
+                    var xolds = new List<string>();
                     foreach (var x in xdata)
                     {
                         if (x is Bewerking bew)
@@ -244,6 +246,11 @@ namespace Controls
                                 if (wps == null || !wps.Any(w =>
                                         string.Equals(w, Werkplek, StringComparison.CurrentCultureIgnoreCase)))
                                     continue;
+                                foreach(var xwp in bew.WerkPlekken)
+                                {
+                                    if (xolds.IndexOf(xwp.Naam) == -1)
+                                        xolds.Add(xwp.Naam);
+                                }
                                 var werk = Werk.FromPath(bew.Path);
                                 if (!werk.IsValid) continue;
                                 var per = werk.Formulier;
@@ -260,6 +267,11 @@ namespace Controls
                     }
                     Application.DoEvents();
                     OnUpdateIndeling();
+                    if (xolds.Count > 0)
+                        foreach (var v in xolds)
+                            OnUpdateIndeling(v);
+                    else
+                        OnUpdateIndeling(string.Empty);
                 }
                 BitMapCursor?.Dispose();
                 BitMapCursor = null;
@@ -319,6 +331,7 @@ namespace Controls
                         $"{Werkplek} verwijderd uit [{SelectedBewerking.ArtikelNr} | {SelectedBewerking.ProductieNr}]!");
                     Application.DoEvents();
                     OnUpdateIndeling();
+                    OnUpdateIndeling(string.Empty);
                 }
 
             }
@@ -462,6 +475,11 @@ namespace Controls
         protected virtual void OnUpdateIndeling()
         {
             UpdateIndeling?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnUpdateIndeling(string indeling)
+        {
+            UpdateIndeling?.Invoke(indeling, EventArgs.Empty);
         }
 
         private bool _isDragging;

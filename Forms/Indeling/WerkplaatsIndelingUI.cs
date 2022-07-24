@@ -570,6 +570,12 @@ namespace Forms
                 {
                     UpdateIndeling(indeling,true);
                 }
+                else if(sender is string name)
+                {
+                    var x = GetIndeling(name);
+                    if (x != null)
+                        UpdateIndeling(x,!x.IsDefault());
+                }
             }
             catch (Exception ex)
             {
